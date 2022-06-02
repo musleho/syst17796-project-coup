@@ -3,10 +3,16 @@ package Effects;
 import Game.Player;
 
 public class Assassinate extends Effect{
-    
-    public void execute(Player targetPlayer, Player activePlayer){
-        if (paidCoins(activePlayer, 3))
-            targetPlayer.loseInfluence();
-        else System.out.println("You do not have enough coins to do this.");
+    private boolean refutable = true;
+    private boolean blockable = true;
+    private boolean targeted = true;
+    private int cost = 3;
+
+    public void execute(Player targetPlayer){
+        targetPlayer.loseInfluence();
+    }
+
+    public String toString(){
+        return "wants to perform an assassination!";
     }
 }
