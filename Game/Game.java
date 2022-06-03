@@ -4,6 +4,7 @@ import Effects.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Exceptions.*;
 
 // A static helper class to the App.java application.
 // This class effectively handles the implementation of the game logic
@@ -46,18 +47,41 @@ public class Game {
         ALL_PLAYERS.add(new Player(playerName));
     }
 
-    public static void resetPlayers() {
+    public static void resetActivePlayers() {
         PLAYERS.clear();
         PLAYERS.addAll(ALL_PLAYERS);
     }
 
-    public static Player getWinner() {
+    public static String getWinner() {
+        /**
+         * Checks if only one active player is left at the end of the round.
+         * If so, prints a message returns that player's name as a string.
+         * Otherwise, returns null.
+         */
         if(PLAYERS.size() == 1) {
-            System.out.println(PLAYERS.get(0).getName() + " is the winner of this round!");
-            return PLAYERS.get(0);
+            String winner = PLAYERS.get(0).getName();
+            System.out.println(winner + " is the winner of this round!");
+            return winner;
         }
         return null;
-        //determine which (if any) player has won the round.
+    }
+
+    public static Player findActivePlayer(String name) throws PlayerNotFoundException{
+        for(Player player : PLAYERS) {
+            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+                return player;
+        }
+        
+        throw new PlayerNotFoundException();
+    }
+
+    public static Player findAnyPlayer(String name) throws PlayerNotFoundException{
+        for(Player player : ALL_PLAYERS) {
+            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+                return player;
+        }
+        
+        throw new PlayerNotFoundException();
     }
 
     public static void updatePlayerList() {

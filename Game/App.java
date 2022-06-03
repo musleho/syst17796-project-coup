@@ -27,27 +27,28 @@ public class App {
                 Game.input.nextLine(); Game.input.nextLine();
             }
         }
-        Game.resetPlayers();
 
-        for (Player player : Game.ALL_PLAYERS) {
-            System.out.println(player.getName());
-        }
+        Game.resetActivePlayers(); //Puts all registered players into active players list
 
         Deck deck = new Deck();
-        deck.showCards();
         deck.shuffle();
-        System.out.println();
-        deck.showCards();
 
-
-        //Round logic
+        //Rounds loop
         boolean stillPlaying = true;
         while(stillPlaying){
-            //Each player draws two cards;
-            for(Player player : Game.PLAYERS){
+            //Round Initiation
+            for(Player player : Game.PLAYERS) { //Each player draws two cards;
                 deck.drawCard(player);
                 deck.drawCard(player);
             }
+            
+            //
+            Game.resetActivePlayers();
+            for (Player player : Game.PLAYERS) {
+                player.resetPlayer();
+            }
+
+
             stillPlaying = false;
         }
     }

@@ -1,6 +1,7 @@
 package Game;
 import Effects.*;
 import java.util.Hashtable;
+import Exceptions.InvalidNameException;
 
 
 public class Card {
@@ -8,13 +9,6 @@ public class Card {
     private String name;
     private Effect effect;
     private String counteraction;
-
-    //A small exception class defined for catching invalid card names
-    public final class InvalidNameException extends Exception {
-        public InvalidNameException() {
-            super("Invalid card name.");
-        }
-    }
 
     public Card (String name) throws InvalidNameException{
         if(isValidName(name)) {

@@ -3,7 +3,6 @@ package Game;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Effects.*;
-import Cards.*;
 
 public class Player {
     private String name;
@@ -34,6 +33,12 @@ public class Player {
     
     public void addCoins(int num) {
         coins += num;
+    }
+
+    public void resetPlayer() {
+        coins = 2;
+        influence = 2;
+        alive = true;
     }
 
     public void spendCoins(int num) {
