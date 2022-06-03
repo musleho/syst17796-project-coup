@@ -3,6 +3,7 @@ package Effects;
 import Game.Player;
 
 public class ForeignAid extends Effect {
+    private String name = "foreign aid";
     private boolean refutable = false;
     private boolean blockable = true;
     private boolean targeted = false;

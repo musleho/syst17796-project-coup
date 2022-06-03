@@ -3,6 +3,7 @@ package Effects;
 import Game.*;
 
 public class Exchange extends Effect {
+    private String name = "exchange";
     private boolean refutable = true;
     private boolean blockable = false;
     private boolean targeted = false;

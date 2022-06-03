@@ -3,6 +3,7 @@ package Effects;
 import Game.Player;
 
 public class Assassinate extends Effect{
+    private String name = "assassinate";
     private boolean refutable = true;
     private boolean blockable = true;
     private boolean targeted = true;

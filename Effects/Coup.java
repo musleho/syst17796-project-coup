@@ -1,9 +1,9 @@
 package Effects;
 
-import Cards.Card;
 import Game.Player;
 
 public class Coup extends Effect {
+    private String name = "coup";
     private boolean refutable = false;
     private boolean blockable = false;
     private boolean targeted = true;

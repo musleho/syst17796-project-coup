@@ -3,6 +3,8 @@ package Effects;
 import Game.Player;
 
 public class Steal extends Effect {
+    /**Steals two coins from another player */
+    private String name = "steal";
     private boolean refutable = true;
     private boolean blockable = true;
     private boolean targeted = true;
@@ -10,5 +12,9 @@ public class Steal extends Effect {
     
     public void execute(Player targetPlayer){
         targetPlayer.spendCoins(2);
+    }
+
+    public String toString(){
+        return "wants to steal!";
     }
 }

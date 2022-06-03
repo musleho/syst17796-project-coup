@@ -31,3 +31,16 @@ Each active card in a player's hand represents one point of influence. Therefore
 When a player loses influence, they must choose a card to reveal. That card's effect is no longer active for the player.
 
 Once a player's influence falls to 0, they are immediately removed from the round.
+
++------------+-------------+---------------------------------------------------+--------------------+
+| Character  |   Action    |                      Effect                       |   Counteraction    |
++------------+-------------+---------------------------------------------------+--------------------+
+| All        | Income      | Collect 1 coin                                    | N/A                |
+| All        | Foreign Aid | Collect 2 coins                                   | N/A                |
+| All        | Coup        | Pay 7 coins to reduce a player's influence by 1   | N/A                |
+| Duke       | Tax         | Collect 3 coins                                   | Blocks Foreign Aid |
+| Assassin   | Assassinate | Pay 3 coins to reduce a player's influence by 1   | N/A                |
+| Ambassador | Exchange    | Exchange cards in your hand for cards in the deck | Blocks Steal       |
+| Captain    | Steal       | Take 2 coins from another player                  | Blocks Steal       |
+| Contessa   | N/A         | N/A                                               | Blocks Assassinate |
++------------+-------------+---------------------------------------------------+--------------------+
