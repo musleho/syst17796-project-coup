@@ -1,6 +1,8 @@
 package Game;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import Exceptions.InvalidNameException;
 
 public class Deck {
     private ArrayList<Card> activeCards = new ArrayList<Card>();
@@ -15,7 +17,7 @@ public class Deck {
         for (String cardName : Card.validNames){
             for(int i = 0; i < 3; i++){
                 try{activeCards.add(new Card(cardName));}
-                catch(Exception e) {System.out.println(e.getMessage());} //We pull names from the validNames array so this should never trigger.
+                catch(InvalidNameException e) {System.out.println(e.getMessage());} //We pull names from the validNames array so this should never trigger.
             }
         }
     }
@@ -30,14 +32,19 @@ public class Deck {
         }
     }
 
-    public void drawCard(Player player) {
+    public Card drawCard() {
         Card newCard = activeCards.get(0);
         activeCards.remove(0);
-        player.getHand().add(newCard);
+        return newCard;
+    }
+
+    public void returnCard(Card card) {
+        activeCards.add(card);
+        shuffle();
     }
 
     public void discard(Card card){
-        //put a card in the discard pile
+        discardPile.add(card);
     }
 
     public void inspectDiscard() {

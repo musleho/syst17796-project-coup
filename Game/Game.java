@@ -1,21 +1,19 @@
 package Game;
 
 import Effects.*;
-import java.util.Hashtable;
-import java.util.ArrayList;
-import java.util.Scanner;
 import Exceptions.*;
+import java.util.*;
 
 // A static helper class to the App.java application.
-// This class effectively handles the implementation of the game logic
-// while the Application class handles the flow of gameplay.
-public class Game {
-    public static final Hashtable<String,Effect> EFFECTS = new Hashtable<String,Effect>(7);
+// This class effectively handles the implementation of the game logic.
+// The Tools class handles generic functions like getting valid inputs and printing messages
+// while the App class runs and handles the flow of gameplay.
+public abstract class Game {
+    public static final Hashtable<String,Effect> EFFECTS = new Hashtable<String,Effect>(8);
     public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<Player>();
     public static final ArrayList<Player> PLAYERS = new ArrayList<Player>();
-    public static final Scanner input = new Scanner(System.in); // Creates a single scanner to be used throughout.
 
-    public static void buildEffects(){
+    public static void buildEffects(Deck deck){
         EFFECTS.put("income", new Income());
         EFFECTS.put("foreign aid", new ForeignAid());
         EFFECTS.put("coup", new Coup());
@@ -23,9 +21,31 @@ public class Game {
         EFFECTS.put("assassinate", new Assassinate());
         EFFECTS.put("steal", new Steal());
         EFFECTS.put("income", new Income());
+        EFFECTS.put("exchange", new Exchange(deck));
     }
 
-    public static boolean checkEffectBluff(Player player, Effect effect) {
+    public static void showCards(Player player) {
+        if (player.getHand().size() > 0) {
+            Tools.showOnlyMessage("Showing cards for " + player.getName() + ". Press enter if this is you.", 0);
+            Tools.input.nextLine();
+            System.out.print("Revealing cards in ");
+            for(int i = 3; i > 0; i--){
+                Tools.showMessage(i + "... ",1);
+            }
+            for(Card card : player.getHand()) {
+                System.out.println();
+                System.out.println(card);
+            }
+            Tools.showMessage("\n", 1);
+            System.out.println("Press enter to continue.");
+            Tools.input.nextLine();
+            Tools.clearConsole();
+        }
+
+        else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
+    }
+
+    public static boolean checkEffectBluff(Player player, String effect) {
         for (Card card : player.getHand()){
             if (card.getEffect().equals(effect)) return false; //returns false if it is NOT a bluff, to be stored in a variable called "isBluffing"
         }
@@ -43,13 +63,16 @@ public class Game {
         int currentIndex = ALL_PLAYERS.size();
         System.out.print("Please enter the name for Player " + (currentIndex + 1) + ". ");
         System.out.print("Note - Player names cannot contain spaces: ");
-        String playerName = input.next();
-        ALL_PLAYERS.add(new Player(playerName));
+        String playerName = Tools.input.next();
+        ALL_PLAYERS.add(new Player(playerName, currentIndex + 1));
     }
 
     public static void resetActivePlayers() {
         PLAYERS.clear();
         PLAYERS.addAll(ALL_PLAYERS);
+        for (Player player : Game.PLAYERS) {
+            player.resetPlayer();
+        }
     }
 
     public static String getWinner() {
@@ -91,61 +114,5 @@ public class Game {
                 PLAYERS.remove(i);
             }
         }
-    }
-
-    public static void clearConsole() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-
-    public static void sleep(int seconds){
-        try {
-            Thread.sleep(1000*seconds);
-        }
-        catch (InterruptedException e) {
-            System.out.println(e);
-        }
-    }
-
-    public static String promptInput(String prompt, String reprompt, String[] validInputs) {
-        int iters = 0;
-        boolean valid = false;
-        String userInput = "";
-        if (validInputs != null){
-            while(!(valid)) {    
-                String statement = ++iters == 1 ?
-                                            prompt :
-                                            reprompt; 
-                System.out.print(statement);
-                userInput = input.nextLine();
-                for (String validInput : validInputs) {
-                    if (userInput.toLowerCase().equals(validInput.toLowerCase())){
-                        valid = true;
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            System.out.print(prompt);
-            userInput = input.nextLine();
-        }
-        return userInput;
-    }
-
-    public static void showTable(){
-        System.out.println(
-        "+------------+-------------+---------------------------------------------------+--------------------+\n"+
-        "| Character  |   Action    |                      Effect                       |   Counteraction    |\n"+
-        "+------------+-------------+---------------------------------------------------+--------------------+\n"+
-        "| All        | Income      | Collect 1 coin                                    | N/A                |\n"+
-        "| All        | Foreign Aid | Collect 2 coins                                   | N/A                |\n"+
-        "| All        | Coup        | Pay 7 coins to reduce a player's influence by 1   | N/A                |\n"+
-        "| Duke       | Tax         | Collect 3 coins                                   | Blocks Foreign Aid |\n"+
-        "| Assassin   | Assassinate | Pay 3 coins to reduce a player's influence by 1   | N/A                |\n"+
-        "| Ambassador | Exchange    | Exchange cards in your hand for cards in the deck | Blocks Steal       |\n"+
-        "| Captain    | Steal       | Take 2 coins from another player                  | Blocks Steal       |\n"+
-        "| Contessa   | N/A         | N/A                                               | Blocks Assassinate |\n"+
-        "+------------+-------------+---------------------------------------------------+--------------------+");
     }
 }

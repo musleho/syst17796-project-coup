@@ -7,7 +7,7 @@ import Exceptions.InvalidNameException;
 public class Card {
     public static final String[] validNames = {"Ambassador", "Assassin", "Captain", "Contessa", "Duke"};
     private String name;
-    private Effect effect;
+    private String effect;
     private String counteraction;
 
     public Card (String name) throws InvalidNameException{
@@ -15,23 +15,23 @@ public class Card {
             this.name = name;
             switch(name) {
                 case "Ambassador":
-                    this.effect = new Exchange();
+                    this.effect = "exchange";
                     this.counteraction = "block steal";
                     break;
                 case "Assassin":
-                    this.effect = new Assassinate();
+                    this.effect = "assassinate";
                     this.counteraction = "";
                     break;
                 case "Captain":
-                    this.effect = new Steal();
+                    this.effect = "steal";
                     this.counteraction = "block steal";
                     break;
                 case "Contessa":
-                    this.effect = new Income(); //placeholder since Contessa has no effect
+                    this.effect = "N/A";
                     this.counteraction = "block assassinate";
                     break;
                 case "Duke":
-                    this.effect = new Tax();
+                    this.effect = "tax";
                     this.counteraction = "block foreign aid";
             }
         }
@@ -50,7 +50,17 @@ public class Card {
 
     public String getName() {return this.name;}
 
-    public Effect getEffect(){return this.effect;}
+    public String getEffect(){return this.effect;}
 
     public String getCounteraction(){return this.counteraction;}
+
+    public String toString() {
+        return "Name: " + this.name + "\n"
+             + "Effect: " + this.effect + "\n"
+             + "Counteraction: " + this.counteraction + "\n";
+    }
+
+    public boolean equals(Card card){
+        return card.name.equals(this.name);
+    }
 }
