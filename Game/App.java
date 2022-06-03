@@ -16,13 +16,15 @@ public class App {
         System.out.println("Now let's get some players registered.");
         Game.sleep(1);
         String[] validNumPlayers = {"3", "4", "5", "6"};
-        String plyrCount = Game.promptInput("Firstly, how many players are there? (Minimum of 3 and maximum of 6): ",
+        String rawPlayerCount = Game.promptInput("Firstly, how many players are there? (Minimum of 3 and maximum of 6): ",
                           "Sorry, that won't work. Please enter a number between 3 and 6: ", 
                           validNumPlayers);
-        for (int i = 1; i <= Integer.parseInt(plyrCount); i++) {
+        
+        int plyrCount = Integer.parseInt(rawPlayerCount);
+        for (int i = 1; i <= plyrCount; i++) {
             Game.registerPlayer();
             System.out.println("Thanks for joining, " + Game.ALL_PLAYERS.get(Game.ALL_PLAYERS.size()-1).getName() + "!");
-            if (i < Integer.parseInt(plyrCount)) {
+            if (i < plyrCount) {
                 System.out.println("Please press enter and pass the computer to the next registrant.");
                 Game.input.nextLine(); Game.input.nextLine();
             }
@@ -42,15 +44,20 @@ public class App {
                 deck.drawCard(player);
             }
             
-            //
-            Game.resetActivePlayers();
-            for (Player player : Game.PLAYERS) {
-                player.resetPlayer();
+            String[] yN = {"y", "n"};
+            String cont = Game.promptInput("Would you like to play another round [y/n]: ",
+                                        "Sorry, I didn't get that. Would you like to play another round [y/n]",
+                                        yN);
+            if(cont.toLowerCase().equals("y")) {
+                //Round reset
+                stillPlaying = true;
+                Game.resetActivePlayers();
+                for (Player player : Game.PLAYERS) {
+                    player.resetPlayer();
+                }
             }
 
-
-            stillPlaying = false;
+            else stillPlaying = false; //exits the Round-repeat while-loop.
         }
     }
-    
 }
