@@ -65,7 +65,7 @@ public class App {
                 String[] otherPlayerNames = new String[otherPlayers.length]; //names of non-active players for validation
                 for (int i = 0; i < otherPlayerNames.length; i++) {
                     otherPlayerNames[i] = otherPlayers[i].getName();
-                    System.out.println(otherPlayers[i]);
+                    // System.out.println(otherPlayers[i]);
                 }
                 
                 String[] validEffects = {"0", "1", "2", "3", "4", "5", "6", "7"};
@@ -74,9 +74,8 @@ public class App {
                 Effect declaredEffect = Game.EFFECTS[2]; //default to coup until properly overwritten
                 if (activePlayer.getCoins() >= 10); //force a coup if the player has 10 or more coins.
                 else {
-                    Tools.showTable();
                     while (playerChoice == 0 || sufficientCoins == false) {
-                        
+                        Tools.showTable();
                         String effectPrompt = "Enter the key number of the effect you wish to declare: ";
                         playerChoice = Integer.parseInt(Tools.promptInput(effectPrompt, "Sorry, that isn't valid. " + effectPrompt, validEffects));
                         if (playerChoice == 0) {

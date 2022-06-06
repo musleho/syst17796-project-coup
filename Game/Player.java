@@ -63,6 +63,8 @@ public class Player implements Comparable<Player>{
             hand.remove(cardIndex);
             deck.shuffle();
             drawCard(deck);
+            Tools.showMessage("\n" + this.name + " has swapped cards. Preparing to show new hand...\n", 2);
+            Game.showCards(this); //should be replaced with something a bit more elegant.
         }
     }
 
@@ -102,7 +104,6 @@ public class Player implements Comparable<Player>{
         
         //gets player choice on which card to reveal if they have more than one card.
         if(influence == 2) {     
-            Game.showCards(this);
             System.out.println(name + ", please choose a card to lose.");
             String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
             String[] validInputs = {"1", "2"};
