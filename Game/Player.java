@@ -83,13 +83,13 @@ public class Player implements Comparable<Player>{
             loser = targetPlayer.getName();
             Tools.showMessage(loser + " was bluffing! ", 1.25);
             Tools.showMessage(loser + " loses influence.", 1);
-            targetPlayer.loseInfluence();
+            targetPlayer.loseInfluence(deck);
             return true; //challenge succeeded
         }
         else {
             Tools.showMessage(targetPlayer.getName() + " wasn't bluffing!\n", 1.25);
             Tools.showMessage(loser + " loses influence.\n", 1);
-            loseInfluence();
+            loseInfluence(deck);
             targetPlayer.swapCards(deck, cardIndex);
             return false; //challenge failed
         }
@@ -99,7 +99,7 @@ public class Player implements Comparable<Player>{
         return "block " + effect.getName();
     }
 
-    public void loseInfluence() {
+    public void loseInfluence(Deck deck) {
         int cardIndex = 0;
         
         //gets player choice on which card to reveal if they have more than one card.
@@ -112,6 +112,7 @@ public class Player implements Comparable<Player>{
         
         Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
         influence--; //reduce player influence by 1
+        deck.discard(hand.get(cardIndex));
         hand.remove(cardIndex); //remove a chosen card from the player's hand
         Tools.showMessage(name + " has " + influence + " influence left!\n", 1.75);
         
