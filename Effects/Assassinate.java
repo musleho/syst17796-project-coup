@@ -3,12 +3,11 @@ package Effects;
 import Game.Player;
 
 public class Assassinate extends Effect{
-    private String name = "assassinate";
-    private boolean refutable = true;
-    private boolean blockable = true;
-    private boolean targeted = true;
-    private int cost = 3;
 
+    public Assassinate() {
+        super("assassinate", true, true, true, 3);
+    }
+    
     public void execute(Player targetPlayer){
         targetPlayer.loseInfluence();
     }

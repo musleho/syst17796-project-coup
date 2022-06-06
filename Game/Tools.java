@@ -59,18 +59,19 @@ public abstract class Tools {
 
     public static void showTable(){
         System.out.println(
-        "+------------+-------------+---------------------------------------------------+--------------------+\n"+
-        "| Character  |   Action    |                      Effect                       |   Counteraction    |\n"+
-        "+------------+-------------+---------------------------------------------------+--------------------+\n"+
-        "| All        | Income      | Collect 1 coin                                    | N/A                |\n"+
-        "| All        | Foreign Aid | Collect 2 coins                                   | N/A                |\n"+
-        "| All        | Coup        | Pay 7 coins to reduce a player's influence by 1   | N/A                |\n"+
-        "| Duke       | Tax         | Collect 3 coins                                   | Blocks Foreign Aid |\n"+
-        "| Assassin   | Assassinate | Pay 3 coins to reduce a player's influence by 1   | N/A                |\n"+
-        "| Ambassador | Exchange    | Exchange cards in your hand for cards in the deck | Blocks Steal       |\n"+
-        "| Captain    | Steal       | Take 2 coins from another player                  | Blocks Steal       |\n"+
-        "| Contessa   | N/A         | N/A                                               | Blocks Assassinate |\n"+
-        "+------------+-------------+---------------------------------------------------+--------------------+");
+            "+------------+------------+-------------+---------------------------------------------------+--------------------+\n"+
+            "| Key Number | Character  |   Action    |                      Effect                       |   Counteraction    |\n"+
+            "+------------+------------+-------------+---------------------------------------------------+--------------------+\n"+
+            "|          0 | All        | Review      | Look at your hand or discard (does not use turn)  | N/A                |\n"+   
+            "|          1 | All        | Income      | Collect 1 coin                                    | N/A                |\n"+
+            "|          2 | All        | Foreign Aid | Collect 2 coins                                   | N/A                |\n"+
+            "|          3 | All        | Coup        | Pay 7 coins to reduce a player's influence by 1   | N/A                |\n"+
+            "|          4 | Duke       | Tax         | Collect 3 coins                                   | Blocks Foreign Aid |\n"+
+            "|          5 | Assassin   | Assassinate | Pay 3 coins to reduce a player's influence by 1   | N/A                |\n"+
+            "|          6 | Ambassador | Exchange    | Exchange cards in your hand for cards in the deck | Blocks Steal       |\n"+
+            "|          7 | Captain    | Steal       | Take 2 coins from another player                  | Blocks Steal       |\n"+
+            "|        N/A | Contessa   | N/A         | N/A                                               | Blocks Assassinate |\n"+
+            "+------------+------------+-------------+---------------------------------------------------+--------------------+");
     }
     
 }

@@ -4,15 +4,10 @@ import Game.*;
 import java.util.ArrayList;
 
 public class Exchange extends Effect {
-    private String name = "exchange";
-    private boolean refutable = true;
-    private boolean blockable = false;
-    private boolean targeted = false;
-    private int cost = 0;
     private Deck deck;
     
     public Exchange(Deck deck) {
-        super();
+        super("exchange", true, false, false, 0);
         this.deck = deck;
     }
 
@@ -77,7 +72,6 @@ public class Exchange extends Effect {
                 String name = newCards.get(i).getName();
                 drawnCards[i] = name.toLowerCase();
                 System.out.print(" " + name);
-                System.out.println("Valid input string item: " + drawnCards[i]);
             }
             Tools.showMessage("\n", 2.5);
 

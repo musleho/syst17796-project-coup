@@ -1,6 +1,4 @@
 package Game;
-import Effects.*;
-import java.util.Hashtable;
 import Exceptions.InvalidNameException;
 
 
@@ -20,7 +18,7 @@ public class Card {
                     break;
                 case "Assassin":
                     this.effect = "assassinate";
-                    this.counteraction = "";
+                    this.counteraction = "N/A";
                     break;
                 case "Captain":
                     this.effect = "steal";

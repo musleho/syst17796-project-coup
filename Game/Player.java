@@ -1,8 +1,8 @@
 package Game;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import Effects.*;
+import Exceptions.InsufficientCoinsException;
 
 public class Player implements Comparable<Player>{
     private String name;
@@ -34,6 +34,8 @@ public class Player implements Comparable<Player>{
     }
 
     public int getScore() {return this.score;}
+
+    public void increaseScore() {score++;}
     
     public void addCoins(int num) {
         coins += num;
@@ -50,38 +52,75 @@ public class Player implements Comparable<Player>{
         coins -= num; //should add exception handling so cannot spend more coins than available
     }
 
-    public Effect declareEffect(String effect){
-        System.out.println();
-        return Game.EFFECTS.get(effect);
+    public void drawCard(Deck deck){
+        this.hand.add(deck.drawCard());
+    }
+
+    public void swapCards(Deck deck, int cardIndex) {
+        if (cardIndex >= 0 && cardIndex < hand.size()) {
+            Card oldCard = hand.get(cardIndex);
+            deck.returnCard(oldCard);
+            hand.remove(cardIndex);
+            deck.shuffle();
+            drawCard(deck);
+        }
+    }
+
+    public Effect declareEffect(int effect) throws InsufficientCoinsException{
+        Effect eff = Game.EFFECTS[effect - 1];
+        if (this.coins >= eff.getCost()) 
+            return Game.EFFECTS[effect - 1];
+        else throw new InsufficientCoinsException();
         //determine if effect is bluff or not
         //declares effect without executing
     }
 
-    public void challenge(String playerName){
-        //Find player by playerName
-        //Challenge player
+    public boolean challenge(Player targetPlayer, boolean isBluffing, int cardIndex, Deck deck){
+        String loser = name;
+        if (isBluffing) {
+            loser = targetPlayer.getName();
+            Tools.showMessage(loser + " was bluffing! ", 1.25);
+            Tools.showMessage(loser + " loses influence.", 1);
+            targetPlayer.loseInfluence();
+            return true; //challenge succeeded
+        }
+        else {
+            Tools.showMessage(targetPlayer.getName() + " wasn't bluffing!\n", 1.25);
+            Tools.showMessage(loser + " loses influence.\n", 1);
+            loseInfluence();
+            targetPlayer.swapCards(deck, cardIndex);
+            return false; //challenge failed
+        }
     }
 
-    public void declareCounteract(Effect effect){
-        //determine if countraction is bluff or not
-        //declares counteraction to a given effect
+    public String counteract(Effect effect){
+        return "block " + effect.getName();
     }
 
     public void loseInfluence() {
         int cardIndex = 0;
         
-        //gets player choice on which card to reveal
-        if(influence == 2) {
-            Scanner input = new Scanner(System.in);
-            System.out.println("Please choose a card to lose.");
-            System.out.print("Type '1' to lose your " + hand.get(0).getName() + "or type '2' to lose your " + hand.get(1) + ":");
-
+        //gets player choice on which card to reveal if they have more than one card.
+        if(influence == 2) {     
+            Game.showCards(this);
+            System.out.println(name + ", please choose a card to lose.");
+            String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
+            String[] validInputs = {"1", "2"};
+            cardIndex = Integer.parseInt(Tools.promptInput(prompt, "Sorry, I didn't understand that. " + prompt, validInputs)) - 1;
         }
-        hand.remove(cardIndex); //remove a chosen card from the player's hand
+        
+        Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
         influence--; //reduce player influence by 1
+        hand.remove(cardIndex); //remove a chosen card from the player's hand
+        Tools.showMessage(name + " has " + influence + " influence left!\n", 1.75);
+        
         if (influence < 1) { //if player influence falls to 0 or less, they are no longer active
             alive = false;
+            Tools.showMessage(name + " is out of the game!", 1.1);
         }
+
+        System.out.print("\nPress enter to continue.");
+        Tools.input.nextLine();
     }
 
     public int compareTo(Player player) {
@@ -104,6 +143,10 @@ public class Player implements Comparable<Player>{
                "Is active: " + this.alive + "\n" +
                "Current hand:" + cards + "\n" +
                "Current score: " + this.score;
+    }
+
+    public boolean equals(Player player){
+        return this.name == player.name;
     }
 
     public boolean isAlive() {return this.alive;}

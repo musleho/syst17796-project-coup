@@ -9,20 +9,10 @@ import java.util.*;
 // The Tools class handles generic functions like getting valid inputs and printing messages
 // while the App class runs and handles the flow of gameplay.
 public abstract class Game {
-    public static final Hashtable<String,Effect> EFFECTS = new Hashtable<String,Effect>(8);
+    public static final Deck deck = new Deck();
+    public static final Effect[] EFFECTS = {new Income(), new ForeignAid(), new Coup(), new Tax(), new Assassinate(), new Exchange(deck), new Steal()};
     public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<Player>();
     public static final ArrayList<Player> PLAYERS = new ArrayList<Player>();
-
-    public static void buildEffects(Deck deck){
-        EFFECTS.put("income", new Income());
-        EFFECTS.put("foreign aid", new ForeignAid());
-        EFFECTS.put("coup", new Coup());
-        EFFECTS.put("tax", new Tax());
-        EFFECTS.put("assassinate", new Assassinate());
-        EFFECTS.put("steal", new Steal());
-        EFFECTS.put("income", new Income());
-        EFFECTS.put("exchange", new Exchange(deck));
-    }
 
     public static void showCards(Player player) {
         if (player.getHand().size() > 0) {
@@ -45,18 +35,28 @@ public abstract class Game {
         else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
     }
 
-    public static boolean checkEffectBluff(Player player, String effect) {
-        for (Card card : player.getHand()){
-            if (card.getEffect().equals(effect)) return false; //returns false if it is NOT a bluff, to be stored in a variable called "isBluffing"
+    public static int checkEffectBluff(Player player, String effect) {
+        if (effect.equals("income") || effect.equals("foreign aid") || effect.equals("coup")) return 2; //if the effect isn't refutable
+        else {
+            for (int i = 0; i < player.getHand().size(); i++){
+                if (player.getHand().get(i).getEffect().equals(effect)) return i; //if player is not bluffing, index of card to be swapped
+            }
+            return -1; //if they are bluffing
         }
-        return true; //returns true if it IS a bluff, to be stored in a variable called "isBluffing"
     }
 
-    public static boolean checkCounteractBluff(Player player, Effect effect) {
-        for (Card card : player.getHand()){
-            if(card.getCounteraction().equals("block "+ effect.getName())) return false; //returns false if it is NOT a bluff , to be stored in a variable called "isBluffing"
+    public static int checkCounteractBluff(Player player, String counteract) {
+        for (int i = 0; i < player.getHand().size(); i++){
+            if(player.getHand().get(i).getCounteraction().equals(counteract)) return i; //if blocker is not bluffing, 
         }
-        return true; //returns true if it IS a bluff, to be stored in a variable called "isBluffing"
+        return -1; //if blocker is bluffing
+    }
+
+    public static Card findCardByName(Player player, String cardName) throws InvalidNameException{
+        for (Card card : player.getHand()) {
+            if (card.getName().equals(cardName)) return card;
+        }
+        throw new InvalidNameException();
     }
 
     public static void registerPlayer(){
@@ -66,6 +66,18 @@ public abstract class Game {
         String playerName = Tools.input.next();
         ALL_PLAYERS.add(new Player(playerName, currentIndex + 1));
     }
+
+    public static Player[] findWaitingPlayers(Player activePlayer) {
+        Player[] waitingPlayers = new Player[PLAYERS.size() - 1];
+        int otherPlayersIndex = 0;
+        for (Player player : Game.PLAYERS) {
+            if (!player.equals(activePlayer)) {
+                waitingPlayers[otherPlayersIndex++] = player;
+            }
+        }
+        return waitingPlayers;
+    }
+
 
     public static void resetActivePlayers() {
         PLAYERS.clear();
@@ -89,7 +101,12 @@ public abstract class Game {
         return null;
     }
 
-    public static Player findActivePlayer(String name) throws PlayerNotFoundException{
+    public static Player findTurnPlayer(int turnNum, int startPlayerNum) {
+        int turnPlayerNum = (startPlayerNum + turnNum) % PLAYERS.size();
+        return PLAYERS.get(turnPlayerNum);
+    }
+
+    public static Player findLivingPlayer(String name) throws PlayerNotFoundException{
         for(Player player : PLAYERS) {
             if (player.getName().toLowerCase().equals(name.toLowerCase()))
                 return player;
@@ -110,9 +127,23 @@ public abstract class Game {
     public static void updatePlayerList() {
         for (int i = 0; i < PLAYERS.size(); i++) {
             if(!PLAYERS.get(i).isAlive()){
-                System.out.println(PLAYERS.get(i).getName() + " has been exiled!");
                 PLAYERS.remove(i);
             }
         }
+    }
+
+    public static boolean [] processChallenges(Player[] otherPlayers, Player activePlayer, boolean apIsBluffing, int cardFlag, Deck deck) {
+        String[] yN = {"y", "n"};
+        boolean[] challenge = {false, false}; //first element stores whether a challenge was issued, second one whether it was successful
+        for (Player player : otherPlayers) {
+            String willChallenge = Tools.promptInput(player.getName() + ", would you like to challenge? [y/n]: ", 
+                                            "Sorry, I didn't understand. Would you like to challenge? [y/n]: ", yN).toLowerCase();
+            if (willChallenge.equals("y")) {
+                challenge[0] = true; //at this point, a challenge was issued, so this is true
+                challenge[1] = player.challenge(activePlayer, apIsBluffing, cardFlag, deck); //this stores the result of the challenge.
+                break;
+            }
+        }
+        return challenge;
     }
 }

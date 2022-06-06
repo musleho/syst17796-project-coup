@@ -16,6 +16,14 @@ public abstract class Effect {
     public abstract void execute(Player targetPlayer);
 
     //Accessors
+    public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){
+        this.name = name;
+        this.refutable = refutable;
+        this.blockable = blockable;
+        this.targeted = targeted;
+        this.cost = cost;
+    }
+    
     public String getName() {return name;}
 
     public boolean isRefutable() {return refutable;}
@@ -25,6 +33,8 @@ public abstract class Effect {
     public boolean isTargeted() {return targeted;}
 
     public int getCost() {return cost;}
+
+    public void setCost(int cost) {this.cost = cost;}
 
     //Generic methods
     public abstract String toString();
