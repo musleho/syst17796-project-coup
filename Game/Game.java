@@ -67,6 +67,11 @@ public abstract class Game {
         ALL_PLAYERS.add(new Player(playerName, currentIndex + 1));
     }
 
+    public static void registerPlayer(String name){ //for debugging, to skip the whole registration process
+        int currentIndex = ALL_PLAYERS.size();
+        ALL_PLAYERS.add(new Player(name, currentIndex + 1));
+    }
+
     public static Player[] findWaitingPlayers(Player activePlayer) {
         Player[] waitingPlayers = new Player[PLAYERS.size() - 1];
         int otherPlayersIndex = 0;

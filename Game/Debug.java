@@ -4,20 +4,14 @@ import Exceptions.*;
 import Effects.*;
 
 //This will eventually be the application file. For now it can serve as a sort of test playground.
-public class App {
+public class Debug {
 
     public static void main(String[] args) {
         //Game initiation logic
 
         Deck deck = Game.deck;
-        Tools.showOnlyMessage("Welcome to JavaCoup!\n", 1.5);
-        
-        Tools.showOnlyMessage("Before we begin, take a moment to review the short guide below\n", 2.5);
-        Tools.showTable();
-        Tools.showMessage("\n\n", 5);
-        
-        Tools.showMessage("Now let's get some players registered. ", 1.5);
 
+        String[] somePlayers = {"Omar", "Pizaan", "Dhruv", "Kush", "Margaux", "Lucas"};
         String[] yN = {"y", "n"};
         String[] validNumPlayers = {"3", "4", "5", "6"};
         String rawPlayerCount = Tools.promptInput("Firstly, how many players are there? (Minimum of 3 and maximum of 6): ",
@@ -26,7 +20,7 @@ public class App {
         
         int plyrCount = Integer.parseInt(rawPlayerCount);
         for (int i = 1; i <= plyrCount; i++) {
-            Game.registerPlayer();
+            Game.registerPlayer(somePlayers[i]);
             System.out.println("Thanks for joining, " + Game.ALL_PLAYERS.get(Game.ALL_PLAYERS.size()-1).getName() + "!");
             if (i < plyrCount) {
                 System.out.println("Please press enter and pass the computer to the next registrant.");
@@ -37,10 +31,8 @@ public class App {
 
         //Rounds loop
         boolean stillPlaying = true;
-        double rand = Math.random()*Game.PLAYERS.size();
-        System.out.println("Starting player as double: " + rand);
+        double rand = Math.random()*Game.ALL_PLAYERS.size();
         int startingPlayer = (int)(Math.floor(rand));
-        
         while(stillPlaying){
             //Round Initiation
             Game.resetActivePlayers(); //Puts all registered players into active players list and reset their fields.
@@ -48,7 +40,6 @@ public class App {
             for(Player player : Game.PLAYERS) { //Each player draws two cards;
                 player.drawCard(deck);
                 player.drawCard(deck);
-                Game.showCards(player); //Shows the drawn cards to the player;
             }
             int turnCount = 0;
             String roundWinner = null;
@@ -58,6 +49,11 @@ public class App {
                 // int numPlayers = Game.PLAYERS.size(); // gets the number of living players each turn
                 Player activePlayer = Game.findTurnPlayer(turnCount, startingPlayer); //get the current player's turn
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
+                System.out.println("Starting player as double: " + rand);
+
+                for(Player player : Game.ALL_PLAYERS){
+                    System.out.println(player);
+                }
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
 
@@ -76,7 +72,7 @@ public class App {
                 if (activePlayer.getCoins() >= 10); //force a coup if the player has 10 or more coins.
                 else {
                     while (playerChoice == 0 || sufficientCoins == false) {
-                        Tools.showTable();
+                        // Tools.showTable(); //Don't need this for now.
                         System.out.println("\nDiscard pile:");
                         deck.inspectDiscard();
                         System.out.println();
@@ -168,14 +164,15 @@ public class App {
                     try {Game.findAnyPlayer(roundWinner).increaseScore();}
                     catch (PlayerNotFoundException e) {e.printStackTrace();}
                 }
+                
                 turnCount++; //increment the number of turns played.
             }
             
             String cont = Tools.promptInput("Would you like to play another round [y/n]: ",
                                         "Sorry, I didn't get that. Would you like to play another round [y/n]",
                                         yN);
-            stillPlaying = cont.toLowerCase().equals("y");
             deck.resetDeck();
+            stillPlaying = cont.toLowerCase().equals("y");
             Game.resetActivePlayers();
         }
     }

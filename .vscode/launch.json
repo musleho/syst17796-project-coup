@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch Debug",
+            "request": "launch",
+            "mainClass": "Game.Debug",
+            "projectName": "syst17796-project-coup_f6abeeb8"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "Game.App",
+            "projectName": "syst17796-project-coup_f6abeeb8"
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
