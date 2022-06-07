@@ -49,7 +49,7 @@ public class Deck {
 
     public void inspectDiscard() {
         for(Card card : discardPile) {
-            System.out.println(card.getName());
+            System.out.print(" " + card.getName());
         }
     }
 

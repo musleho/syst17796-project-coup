@@ -13,9 +13,6 @@ public abstract class Effect {
     private boolean refutable,blockable,targeted;
     private int cost;
     
-    public abstract void execute(Player targetPlayer);
-
-    //Accessors
     public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){
         this.name = name;
         this.refutable = refutable;
@@ -23,7 +20,10 @@ public abstract class Effect {
         this.targeted = targeted;
         this.cost = cost;
     }
-    
+
+    public abstract void execute(Player targetPlayer);
+
+    //Accessors
     public String getName() {return name;}
 
     public boolean isRefutable() {return refutable;}
@@ -34,7 +34,7 @@ public abstract class Effect {
 
     public int getCost() {return cost;}
 
-    public void setCost(int cost) {this.cost = cost;}
+    public void setCost(int cost) {this.cost = cost;} //did I ever call this?
 
     //Generic methods
     public abstract String toString();

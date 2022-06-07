@@ -31,6 +31,7 @@ public class Card {
                 case "Duke":
                     this.effect = "tax";
                     this.counteraction = "block foreign aid";
+                    break;
             }
         }
         else throw new InvalidNameException();

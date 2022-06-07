@@ -76,17 +76,11 @@ public class App {
                 else {
                     while (playerChoice == 0 || sufficientCoins == false) {
                         Tools.showTable();
+                        System.out.println("\nDiscard pile:");
+                        deck.inspectDiscard();
+                        System.out.println();
                         String effectPrompt = "Enter the key number of the effect you wish to declare: ";
                         playerChoice = Integer.parseInt(Tools.promptInput(effectPrompt, "Sorry, that isn't valid. " + effectPrompt, validEffects));
-                        if (playerChoice == 0) {
-                            String[] choices = {"0","1"};
-                            int showChoice = Integer.parseInt(Tools.promptInput("Enter 0 to look at your hand or 1 to review discard: ",
-                                                                  "Sorry, please enter 0 or 1: ", choices));
-                            
-                            if (showChoice == 0) Game.showCards(activePlayer); //enter 0 to review cards in hand.
-                            else deck.inspectDiscard();
-                        }
-                    
                         try {
                             declaredEffect = activePlayer.declareEffect(playerChoice);
                             sufficientCoins = true;
@@ -96,8 +90,8 @@ public class App {
                             Tools.showMessage("Let's try again. ", 0.5);
                             sufficientCoins = false;
                         }
-                        catch (ArrayIndexOutOfBoundsException e){
-                            continue;
+                        catch (ArrayIndexOutOfBoundsException e){ //This gets triggered if player enters 0 - checks hand.
+                            Game.showCards(activePlayer); //This is a bad way to code this...
                         }
                     }
                 }
@@ -169,6 +163,9 @@ public class App {
                 
                 Game.updatePlayerList();
                 roundWinner = Game.getWinner();
+                try {Game.findAnyPlayer(roundWinner).increaseScore();}
+                catch (PlayerNotFoundException e) {e.printStackTrace();}
+                deck.resetDeck();
                 turnCount++; //increment the number of turns played.
             }
             
