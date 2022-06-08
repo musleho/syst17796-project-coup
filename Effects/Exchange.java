@@ -83,7 +83,7 @@ public class Exchange extends Effect {
             }
 
             else {
-                String newCardName = Tools.promptInput("Type the name of the card you want to or type pass to keep your card: ",
+                String newCardName = Tools.promptInput("Type the name of the card you want or type pass to keep your card: ",
                                                     "Sorry, I didn't understand that. Please try again: ", drawnCards).toLowerCase();
                 if (!(newCardName.equals("pass"))) swapCards(newCards, newCardName, playerHand, thrownCardName);
             }

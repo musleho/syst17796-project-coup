@@ -100,29 +100,31 @@ public class Player implements Comparable<Player>{
     }
 
     public void loseInfluence(Deck deck) {
-        int cardIndex = 0;
-        
-        //gets player choice on which card to reveal if they have more than one card.
-        if(influence == 2) {     
-            System.out.println(name + ", please choose a card to lose.");
-            String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
-            String[] validInputs = {"1", "2"};
-            cardIndex = Integer.parseInt(Tools.promptInput(prompt, "Sorry, I didn't understand that. " + prompt, validInputs)) - 1;
-        }
-        
-        Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
-        influence--; //reduce player influence by 1
-        deck.discard(hand.get(cardIndex));
-        hand.remove(cardIndex); //remove a chosen card from the player's hand
-        Tools.showMessage(name + " has " + influence + " influence left!\n", 1.75);
-        
-        if (influence < 1) { //if player influence falls to 0 or less, they are no longer active
-            alive = false;
-            Tools.showMessage(name + " is out of the game!", 1.1);
-        }
+        if (this.isAlive()) { //don't do anything if the player is already dead.
+            int cardIndex = 0;
+            
+            //gets player choice on which card to reveal if they have more than one card.
+            if(influence == 2) {     
+                System.out.println(name + ", please choose a card to lose.");
+                String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
+                String[] validInputs = {"1", "2"};
+                cardIndex = Integer.parseInt(Tools.promptInput(prompt, "Sorry, I didn't understand that. " + prompt, validInputs)) - 1;
+            }
+            
+            Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
+            influence--; //reduce player influence by 1
+            deck.discard(hand.get(cardIndex));
+            hand.remove(cardIndex); //remove a chosen card from the player's hand
+            Tools.showMessage(name + " has " + influence + " influence left!\n", 1.75);
+            
+            if (influence < 1) { //if player influence falls to 0 or less, they are no longer active
+                alive = false;
+                Tools.showMessage(name + " is out of the game!", 1.1);
+            }
 
-        System.out.print("\nPress enter to continue.");
-        Tools.input.nextLine();
+            System.out.print("\nPress enter to continue.");
+            Tools.input.nextLine();
+        }
     }
 
     public int compareTo(Player player) {
