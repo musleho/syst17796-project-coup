@@ -9,6 +9,13 @@
             "name": "Launch Debug",
             "request": "launch",
             "mainClass": "Game.Debug",
+            "projectName": "syst17796-project-coup_f09ba51c"
+        },
+        {
+            "type": "java",
+            "name": "Launch Debug",
+            "request": "launch",
+            "mainClass": "Game.Debug",
             "projectName": "syst17796-project-coup_f6abeeb8"
         },
         {

@@ -106,9 +106,17 @@ public abstract class Game {
         return null;
     }
 
-    public static Player findTurnPlayer(int turnNum, int startPlayerNum) {
-        int turnPlayerNum = (startPlayerNum + turnNum) % PLAYERS.size();
-        return PLAYERS.get(turnPlayerNum);
+    public static Player findTurnPlayer(int startPlayerNum) {
+        int turnPlayerNum = ++startPlayerNum % ALL_PLAYERS.size();
+        Player expectedPlayer = ALL_PLAYERS.get(turnPlayerNum);
+        for (int i = 0; i < ALL_PLAYERS.size(); i++){
+            if (!expectedPlayer.isAlive()) {
+                expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum);
+                System.out.println("next player"); //for debugging
+            } 
+            else break;
+        }
+        return expectedPlayer;
     }
 
     public static Player findLivingPlayer(String name) throws PlayerNotFoundException{

@@ -2,6 +2,7 @@ package Game;
 
 import Exceptions.*;
 import Effects.*;
+import java.util.Collections;
 
 //This will eventually be the application file. For now it can serve as a sort of test playground.
 public class App {
@@ -37,10 +38,7 @@ public class App {
 
         //Rounds loop
         boolean stillPlaying = true;
-        double rand = Math.random()*Game.PLAYERS.size();
-        System.out.println("Starting player as double: " + rand);
-        int startingPlayer = (int)(Math.floor(rand));
-        
+        String roundWinner = null;
         while(stillPlaying){
             //Round Initiation
             Game.resetActivePlayers(); //Puts all registered players into active players list and reset their fields.
@@ -48,15 +46,23 @@ public class App {
             for(Player player : Game.PLAYERS) { //Each player draws two cards;
                 player.drawCard(deck);
                 player.drawCard(deck);
-                Game.showCards(player); //Shows the drawn cards to the player;
+                Game.showCards(player);
             }
-            int turnCount = 0;
-            String roundWinner = null;
+            // int turnCount = 0;
+            int startingPlayer = 0;
+            if (roundWinner == null) {
+                double rand = Math.random()*Game.ALL_PLAYERS.size();
+                startingPlayer = (int)(Math.floor(rand));
+            }
+            else {
+                try {startingPlayer = Game.findAnyPlayer(roundWinner).getNumber();}
+                catch (PlayerNotFoundException e) {e.printStackTrace();}
+            }
 
             //Turn logic
             while(roundWinner == null){
                 // int numPlayers = Game.PLAYERS.size(); // gets the number of living players each turn
-                Player activePlayer = Game.findTurnPlayer(turnCount, startingPlayer); //get the current player's turn
+                Player activePlayer = Game.findTurnPlayer(startingPlayer++); //get the current player's turn
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
@@ -168,7 +174,6 @@ public class App {
                     try {Game.findAnyPlayer(roundWinner).increaseScore();}
                     catch (PlayerNotFoundException e) {e.printStackTrace();}
                 }
-                turnCount++; //increment the number of turns played.
             }
             
             String cont = Tools.promptInput("Would you like to play another round [y/n]: ",
@@ -177,6 +182,16 @@ public class App {
             stillPlaying = cont.toLowerCase().equals("y");
             deck.resetDeck();
             Game.resetActivePlayers();
+        }
+        
+        // Show the player ranks.
+        Collections.sort(Game.ALL_PLAYERS);
+        Tools.showOnlyMessage("Thanks for playing! Here are the winners...\n", 3);
+        for (int i = Game.ALL_PLAYERS.size(); i > 0; i--) {
+            Tools.showMessage("\n# " + i + ".", 0.5);
+            Tools.showMessage(".", 0.5);
+            Tools.showMessage(". ", 0.5);
+            Tools.showMessage(Game.ALL_PLAYERS.get(i) + "!", 2);
         }
     }
 }
