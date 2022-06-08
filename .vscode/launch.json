@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "Game.App",
+            "projectName": "syst17796-project-coup_f09ba51c"
+        },
+        {
+            "type": "java",
             "name": "Launch Debug",
             "request": "launch",
             "mainClass": "Game.Debug",

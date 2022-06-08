@@ -16,23 +16,32 @@ public abstract class Game {
 
     public static void showCards(Player player) {
         if (player.getHand().size() > 0) {
-            Tools.showOnlyMessage("Showing cards for " + player.getName() + ". Press enter if this is you.", 0);
+            Tools.showOnlyMessage("Showing cards for " + player.getName() + ". Press enter if this is you.", 0); //confirm correct player.
             Tools.input.nextLine();
-            System.out.print("Revealing cards in ");
+            System.out.print("Revealing cards in"); // add some lag 
             for(int i = 3; i > 0; i--){
-                Tools.showMessage(i + "... ",1);
+                Tools.showMessage(" " + i,0.25);
+                for(int j = 0; j < 3; j++){
+                    Tools.showMessage(".", 0.25);
+                }
             }
             for(Card card : player.getHand()) {
                 System.out.println();
                 System.out.println(card);
             }
-            Tools.showMessage("\n", 1);
+            Tools.showMessage("Coin Balance: " + player.getCoins() + "\n", 1.1);
             System.out.println("Press enter to continue.");
             Tools.input.nextLine();
             Tools.clearConsole();
         }
 
         else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
+    }
+
+    public static void showAllCoins() {
+        for (Player player : PLAYERS) {
+            System.out.println("\n" + player.getName() + " has " + player.getCoins() + " coins.");
+        }
     }
 
     public static int checkEffectBluff(Player player, String effect) {

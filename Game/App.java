@@ -83,6 +83,7 @@ public class App {
                 else {
                     while (playerChoice == 0 || sufficientCoins == false) {
                         Tools.showTable();
+                        Game.showAllCoins();
                         System.out.println("\nDiscard pile:");
                         deck.inspectDiscard();
                         System.out.println();
