@@ -36,24 +36,5 @@ public abstract class Effect {
 
     public void setCost(int cost) {this.cost = cost;} //did I ever call this?
 
-    //Generic methods
-    public abstract String toString();
-
-    public boolean equals(Effect eff){
-        return this.name.equals(eff.getName());
-    }
-
-    public boolean isRefutable() {
-        return refutable;
-    }
-
-    public boolean isBlockable() {
-        return blockable;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
     public abstract String toString();
 }
