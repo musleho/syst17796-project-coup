@@ -3,32 +3,44 @@ package Effects;
 import Game.Player;
 
 public abstract class Effect {
+    /**
+     * Refutable: A given effect can be challenged (true)
+     * Blockable: A given effect has a blocking counteraction (true)
+     * Targeted: A given effect targets another player (true)
+     * Cost: Number of coins needed to execute the action
+     */
+    private String name;
     private boolean refutable,blockable,targeted;
     private int cost;
     
-    // public boolean paidCoins(Player player, int numCoins) {
-    //     if (player.getCoins() >= numCoins) {
-    //         player.spendCoins(numCoins);
-    //         return true;
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    // } 
-    // removed as better construct would be to have cost as field and check in game logic
-    // otherwise would need to actually get to execute step before telling player to pick 
-    // a different action
-    
-    /*
-     * Executes the action of that effect object
-     */
+    public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){
+        this.name = name;
+        this.refutable = refutable;
+        this.blockable = blockable;
+        this.targeted = targeted;
+        this.cost = cost;
+    }
+
     public abstract void execute(Player targetPlayer);
 
-    /*
-     * Determines if an effect targets another player or targets active player
-     */
-    public boolean isTargeted() {
-        return targeted;
+    //Accessors
+    public String getName() {return name;}
+
+    public boolean isRefutable() {return refutable;}
+
+    public boolean isBlockable() {return blockable;}
+
+    public boolean isTargeted() {return targeted;}
+
+    public int getCost() {return cost;}
+
+    public void setCost(int cost) {this.cost = cost;} //did I ever call this?
+
+    //Generic methods
+    public abstract String toString();
+
+    public boolean equals(Effect eff){
+        return this.name.equals(eff.getName());
     }
 
     public boolean isRefutable() {

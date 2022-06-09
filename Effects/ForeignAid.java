@@ -3,11 +3,11 @@ package Effects;
 import Game.Player;
 
 public class ForeignAid extends Effect {
-    private boolean refutable = false;
-    private boolean blockable = true;
-    private boolean targeted = false;
-    private int cost = 0;
     
+    public ForeignAid() {
+        super("foreign aid", false, true, false, 0);
+    }
+
     public void execute(Player player) {
         player.addCoins(2);
     }

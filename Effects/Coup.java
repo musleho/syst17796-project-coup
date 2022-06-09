@@ -1,16 +1,18 @@
 package Effects;
 
-import Cards.Card;
 import Game.Player;
+import Game.Deck;
 
 public class Coup extends Effect {
-    private boolean refutable = false;
-    private boolean blockable = false;
-    private boolean targeted = true;
-    private int cost = 7;
-    
+    private Deck deck;
+
+    public Coup(Deck deck) {
+        super("coup", false, false, true, 7);
+        this.deck = deck;
+    }
+
     public void execute(Player targetPlayer){
-        targetPlayer.loseInfluence();
+        targetPlayer.loseInfluence(deck);
     }
 
     public String toString(){
