@@ -49,20 +49,21 @@ public class App {
                 Game.showCards(player);
             }
             // int turnCount = 0;
-            int startingPlayer = 0;
+            Player activePlayer = null;
             if (roundWinner == null) {
                 double rand = Math.random()*Game.ALL_PLAYERS.size();
-                startingPlayer = (int)(Math.floor(rand));
+                try {activePlayer = Game.findPlayerByNum((int)(Math.floor(rand)));}
+                catch (PlayerNotFoundException e){e.printStackTrace();} //would be weird if this triggered.
             }
             else {
-                try {startingPlayer = Game.findAnyPlayer(roundWinner).getNumber();}
+                try {activePlayer = Game.findAnyPlayer(roundWinner);}
                 catch (PlayerNotFoundException e) {e.printStackTrace();}
             }
 
+            roundWinner = null; //reset the roundWinner (if needed) so the turns loop executes.
             //Turn logic
             while(roundWinner == null){
                 // int numPlayers = Game.PLAYERS.size(); // gets the number of living players each turn
-                Player activePlayer = Game.findTurnPlayer(startingPlayer++); //get the current player's turn
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
@@ -79,12 +80,18 @@ public class App {
                 int playerChoice = 0;
                 boolean sufficientCoins = true; //flips to false if declareEffect throws InsufficientCoinsException
                 Effect declaredEffect = Game.EFFECTS[2]; //default to coup until properly overwritten
-                if (activePlayer.getCoins() >= 10); //force a coup if the player has 10 or more coins.
-                else {
+                if (activePlayer.getCoins() >= 10){ //force a coup if the player has 10 or more coins.
+                    for (Player player : Game.PLAYERS) { //for debugging
+                        System.out.println(player.info());
+                    }
+                }
+                else { //otherwise get the input for the effect the player wants to declare.
                     while (playerChoice == 0 || sufficientCoins == false) {
                         Tools.showTable();
-                        Game.showAllCoins();
-                        System.out.println("\nDiscard pile:");
+                        for (Player player : Game.PLAYERS) { //for debugging
+                            System.out.println(player.info());
+                        }
+                        System.out.print("\nDiscard pile:");
                         deck.inspectDiscard();
                         System.out.println();
                         String effectPrompt = "Enter the key number of the effect you wish to declare: ";
@@ -95,7 +102,7 @@ public class App {
                         }
                         catch (InsufficientCoinsException e) {
                             Tools.showMessage("Sorry, you don't have enough coins to do that.\n", 1.25);
-                            Tools.showMessage("Let's try again. ", 0.5);
+                            Tools.showMessage("Let's try again.\n", 0.5);
                             sufficientCoins = false;
                         }
                         catch (ArrayIndexOutOfBoundsException e){ //This gets triggered if player enters 0 - checks hand.
@@ -175,6 +182,8 @@ public class App {
                     try {Game.findAnyPlayer(roundWinner).increaseScore();}
                     catch (PlayerNotFoundException e) {e.printStackTrace();}
                 }
+                
+                else {activePlayer = Game.findTurnPlayer(activePlayer);}
             }
             
             String cont = Tools.promptInput("Would you like to play another round [y/n]: ",

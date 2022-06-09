@@ -133,6 +133,14 @@ public class Player implements Comparable<Player>{
         else return 0;
     }
 
+    public String info() {
+        if (this.alive) {
+            return "Player " + (this.number + 1) + " (" + this.name + ") has "
+                   + this.coins + " coins and " + this.influence + " influence."; 
+        }
+        else {return "Player " + (this.number + 1) + " (" + this.name + ") is exiled.";}
+    }
+
     public String toString() {
         String cards = "";
         if (hand.size() > 0) {
@@ -146,7 +154,7 @@ public class Player implements Comparable<Player>{
                "Current Influence: " + this.influence + "\n" +
                "Is active: " + this.alive + "\n" +
                "Current hand:" + cards + "\n" +
-               "Current score: " + this.score;
+               "Current score: " + this.score + "\n";
     }
 
     public boolean equals(Player player){
@@ -154,6 +162,4 @@ public class Player implements Comparable<Player>{
     }
 
     public boolean isAlive() {return this.alive;}
-
-
 }

@@ -73,12 +73,12 @@ public abstract class Game {
         System.out.print("Please enter the name for Player " + (currentIndex + 1) + ". ");
         System.out.print("Note - Player names cannot contain spaces: ");
         String playerName = Tools.input.next();
-        ALL_PLAYERS.add(new Player(playerName, currentIndex + 1));
+        ALL_PLAYERS.add(new Player(playerName, currentIndex));
     }
 
     public static void registerPlayer(String name){ //for debugging, to skip the whole registration process
         int currentIndex = ALL_PLAYERS.size();
-        ALL_PLAYERS.add(new Player(name, currentIndex + 1));
+        ALL_PLAYERS.add(new Player(name, currentIndex));
     }
 
     public static Player[] findWaitingPlayers(Player activePlayer) {
@@ -115,9 +115,11 @@ public abstract class Game {
         return null;
     }
 
-    public static Player findTurnPlayer(int startPlayerNum) {
-        int turnPlayerNum = ++startPlayerNum % ALL_PLAYERS.size();
-        Player expectedPlayer = ALL_PLAYERS.get(turnPlayerNum);
+    public static Player findTurnPlayer(Player lastPlayer) {
+        int turnPlayerNum = (lastPlayer.getNumber() + 1) % ALL_PLAYERS.size();
+        Player expectedPlayer = null;
+        try {expectedPlayer = findPlayerByNum(turnPlayerNum);}
+        catch (PlayerNotFoundException e) {e.printStackTrace();}
         for (int i = 0; i < ALL_PLAYERS.size(); i++){
             if (!expectedPlayer.isAlive()) {
                 expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum);
@@ -143,6 +145,14 @@ public abstract class Game {
                 return player;
         }
         
+        throw new PlayerNotFoundException();
+    }
+
+    public static Player findPlayerByNum(int num) throws PlayerNotFoundException{
+        for(Player player : ALL_PLAYERS) {
+            if (player.getNumber() == num) return player;
+        }
+
         throw new PlayerNotFoundException();
     }
 
