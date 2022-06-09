@@ -4,6 +4,7 @@ import Game.Player;
 import Game.Deck;
 
 public class Assassinate extends Effect{
+
     private Deck deck;
 
     public Assassinate(Deck deck) {

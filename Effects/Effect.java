@@ -42,4 +42,18 @@ public abstract class Effect {
     public boolean equals(Effect eff){
         return this.name.equals(eff.getName());
     }
+
+    public boolean isRefutable() {
+        return refutable;
+    }
+
+    public boolean isBlockable() {
+        return blockable;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public abstract String toString();
 }
