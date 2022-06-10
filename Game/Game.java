@@ -122,7 +122,7 @@ public abstract class Game {
         catch (PlayerNotFoundException e) {e.printStackTrace();}
         for (int i = 0; i < ALL_PLAYERS.size(); i++){
             if (!expectedPlayer.isAlive()) {
-                expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum);
+                expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum % ALL_PLAYERS.size());
                 System.out.println("next player"); //for debugging
             } 
             else break;
