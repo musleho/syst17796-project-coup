@@ -53,7 +53,7 @@ public class Player implements Comparable<Player>{
     }
 
     public void drawCard(Deck deck){
-        this.hand.add(deck.drawCard());
+        hand.add(deck.drawCard());
     }
 
     public void swapCards(Deck deck, int cardIndex) {
@@ -70,7 +70,7 @@ public class Player implements Comparable<Player>{
 
     public Effect declareEffect(int effect) throws InsufficientCoinsException{
         Effect eff = Game.EFFECTS[effect - 1];
-        if (this.coins >= eff.getCost()) 
+        if (coins >= eff.getCost()) 
             return Game.EFFECTS[effect - 1];
         else throw new InsufficientCoinsException();
         //determine if effect is bluff or not
@@ -104,6 +104,7 @@ public class Player implements Comparable<Player>{
             int cardIndex = 0;
             
             //gets player choice on which card to reveal if they have more than one card.
+            //technically puts view in the model, may need to revise implementation
             if(influence == 2) {     
                 System.out.println(name + ", please choose a card to lose.");
                 String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
@@ -141,7 +142,7 @@ public class Player implements Comparable<Player>{
         else {return "Player " + (this.number + 1) + " (" + this.name + ") is exiled.";}
     }
 
-    public String toString() {
+    public String toString() { //primarily a debugging tool
         String cards = "";
         if (hand.size() > 0) {
             for (Card card : hand){
