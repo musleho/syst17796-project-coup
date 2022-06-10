@@ -3,32 +3,38 @@ package Effects;
 import Game.Player;
 
 public abstract class Effect {
-    private boolean targeted;
-    
-    /*
-     * Determines if a player has sufficient coins to perform an action
-     * and returns true or false.
-    */
-    public boolean paidCoins(Player player, int numCoins) {
-        if (player.getCoins() >= numCoins) {
-            player.spendCoins(numCoins);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    
-    /*
-     * Executes the action and returns a boolean corresponding to success (true)
-     * or failure (false).
+    /**
+     * Refutable: A given effect can be challenged (true)
+     * Blockable: A given effect has a blocking counteraction (true)
+     * Targeted: A given effect targets another player (true)
+     * Cost: Number of coins needed to execute the action
      */
-    public abstract boolean execute(Player targetPlayer, Player activePlayer);
+    private String name;
+    private boolean refutable,blockable,targeted;
+    private int cost;
+    
+    public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){
+        this.name = name;
+        this.refutable = refutable;
+        this.blockable = blockable;
+        this.targeted = targeted;
+        this.cost = cost;
+    }
 
-    /*
-     * Determines if an effect targets another player or targets active player
-     */
-    public boolean isTargeted() {
-        return targeted;
-    }
+    public abstract void execute(Player targetPlayer);
+
+    //Accessors
+    public String getName() {return name;}
+
+    public boolean isRefutable() {return refutable;}
+
+    public boolean isBlockable() {return blockable;}
+
+    public boolean isTargeted() {return targeted;}
+
+    public int getCost() {return cost;}
+
+    public void setCost(int cost) {this.cost = cost;} //did I ever call this?
+
+    public abstract String toString();
 }
