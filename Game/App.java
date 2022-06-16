@@ -9,7 +9,6 @@ public class App {
 
     public static void main(String[] args) {
         //Game initiation logic
-
         Deck deck = Game.deck;
         Tools.showOnlyMessage("Welcome to JavaCoup!\n", 1.5);
         
@@ -48,7 +47,8 @@ public class App {
                 player.drawCard(deck);
                 Game.showCards(player);
             }
-            // int turnCount = 0;
+
+            //Figures out who the first player will be.
             Player activePlayer = null;
             if (roundWinner == null) {
                 double rand = Math.random()*Game.ALL_PLAYERS.size();
@@ -61,9 +61,9 @@ public class App {
             }
 
             roundWinner = null; //reset the roundWinner (if needed) so the turns loop executes.
+            
             //Turn logic
             while(roundWinner == null){
-                // int numPlayers = Game.PLAYERS.size(); // gets the number of living players each turn
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
@@ -81,7 +81,7 @@ public class App {
                 boolean sufficientCoins = true; //flips to false if declareEffect throws InsufficientCoinsException
                 Effect declaredEffect = Game.EFFECTS[2]; //default to coup until properly overwritten
                 if (activePlayer.getCoins() >= 10){ //force a coup if the player has 10 or more coins.
-                    for (Player player : Game.PLAYERS) { //for debugging
+                    for (Player player : Game.PLAYERS) {
                         System.out.println(player.info());
                     }
                 }
