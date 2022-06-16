@@ -34,7 +34,7 @@ public abstract class Effect {
 
     public int getCost() {return cost;}
 
-    public void setCost(int cost) {this.cost = cost;} //did I ever call this?
+    public void setCost(int cost) {this.cost = cost;} //yes I did.
 
     public abstract String toString();
 }
