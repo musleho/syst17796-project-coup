@@ -11,8 +11,8 @@ import java.util.*;
 public abstract class Game {
     public static final Deck deck = new Deck();
     public static final Effect[] EFFECTS = {new Income(), new ForeignAid(), new Coup(deck), new Tax(), new Assassinate(deck), new Exchange(deck), new Steal()};
-    public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<>();
-    public static final ArrayList<Player> PLAYERS = new ArrayList<>();
+    public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<Player>();
+    public static final ArrayList<Player> PLAYERS = new ArrayList<Player>();
 
     public static void showCards(Player player) {
         if (player.getHand().size() > 0) {
