@@ -9,8 +9,8 @@ public abstract class Effect {
      * Targeted: A given effect targets another player (true)
      * Cost: Number of coins needed to execute the action
      */
-    private String name;
-    private boolean refutable,blockable,targeted;
+    private final String name;
+    private final boolean refutable,blockable,targeted;
     private int cost;
     
     public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){

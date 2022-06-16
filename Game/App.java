@@ -4,7 +4,7 @@ import Exceptions.*;
 import Effects.*;
 import java.util.Collections;
 
-//This will eventually be the application file. For now it can serve as a sort of test playground.
+//This will eventually be the application file. For now, it can serve as a sort of test playground.
 public class App {
 
     public static void main(String[] args) {
@@ -86,7 +86,7 @@ public class App {
                     }
                 }
                 else { //otherwise get the input for the effect the player wants to declare.
-                    while (playerChoice == 0 || sufficientCoins == false) {
+                    while (playerChoice == 0 || !sufficientCoins) {
                         Tools.showTable();
                         for (Player player : Game.PLAYERS) { //for debugging
                             System.out.println(player.info());
@@ -137,7 +137,7 @@ public class App {
                 }
 
                 boolean blockSuccessful = false;
-                if (!challengeIssued){ //blocking only relevent when a challenge was not issued.
+                if (!challengeIssued){ //blocking only relevant when a challenge was not issued.
                     if(declaredEffect.isBlockable()){
                         if (declaredEffect instanceof ForeignAid) {  
                             for (Player player : otherPlayers) {
@@ -189,7 +189,7 @@ public class App {
             String cont = Tools.promptInput("Would you like to play another round [y/n]: ",
                                         "Sorry, I didn't get that. Would you like to play another round [y/n]",
                                         yN);
-            stillPlaying = cont.toLowerCase().equals("y");
+            stillPlaying = cont.equalsIgnoreCase("y");
             deck.resetDeck();
             Game.resetActivePlayers();
         }
