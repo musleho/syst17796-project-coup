@@ -4,7 +4,7 @@ import Game.Player;
 import Game.Deck;
 
 public class Coup extends Effect {
-    private Deck deck;
+    private final Deck deck;
 
     public Coup(Deck deck) {
         super("coup", false, false, true, 7);

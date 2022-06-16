@@ -5,7 +5,7 @@ import Game.Deck;
 
 public class Assassinate extends Effect{
 
-    private Deck deck;
+    private final Deck deck;
 
     public Assassinate(Deck deck) {
         super("assassinate", true, true, true, 3);

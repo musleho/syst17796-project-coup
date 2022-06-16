@@ -73,6 +73,8 @@ public class Player implements Comparable<Player>{
         if (coins >= eff.getCost()) 
             return Game.EFFECTS[effect - 1];
         else throw new InsufficientCoinsException();
+        //determine if effect is bluff or not
+        //declares effect without executing
     }
 
     public boolean challenge(Player targetPlayer, boolean isBluffing, int cardIndex, Deck deck){

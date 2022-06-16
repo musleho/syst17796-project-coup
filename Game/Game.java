@@ -38,12 +38,6 @@ public abstract class Game {
         else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
     }
 
-    public static void showAllCoins() {
-        for (Player player : PLAYERS) {
-            System.out.println("\n" + player.getName() + " has " + player.getCoins() + " coins.");
-        }
-    }
-
     public static int checkEffectBluff(Player player, String effect) {
         if (effect.equals("income") || effect.equals("foreign aid") || effect.equals("coup")) return 2; //if the effect isn't refutable
         else {
@@ -102,7 +96,7 @@ public abstract class Game {
     }
 
     public static String getWinner() {
-        /**
+        /*
          * Checks if only one active player is left at the end of the round.
          * If so, prints a message returns that player's name as a string.
          * Otherwise, returns null.
@@ -132,7 +126,7 @@ public abstract class Game {
 
     public static Player findLivingPlayer(String name) throws PlayerNotFoundException{
         for(Player player : PLAYERS) {
-            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+            if (player.getName().equalsIgnoreCase(name))
                 return player;
         }
         
@@ -141,7 +135,7 @@ public abstract class Game {
 
     public static Player findAnyPlayer(String name) throws PlayerNotFoundException{
         for(Player player : ALL_PLAYERS) {
-            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+            if (player.getName().equalsIgnoreCase(name))
                 return player;
         }
         
