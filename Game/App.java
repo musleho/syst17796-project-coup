@@ -201,7 +201,7 @@ public class App {
             Tools.showMessage("\n# " + i + ".", 0.5);
             Tools.showMessage(".", 0.5);
             Tools.showMessage(". ", 0.5);
-            Tools.showMessage(Game.ALL_PLAYERS.get(i) + "!", 2);
+            Tools.showMessage(Game.ALL_PLAYERS.get(i-1) + "!", 2);
         }
     }
 }
