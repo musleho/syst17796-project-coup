@@ -134,8 +134,8 @@ public class Player implements Comparable<Player>{
     }
 
     public int compareTo(Player player) {
-        if(player.getScore() > this.score) return -1;
-        else if (player.getScore() < this.score) return 1;
+        if(player.getScore() > this.score) return 1;
+        else if (player.getScore() < this.score) return -1;
         else return 0;
     }
 
