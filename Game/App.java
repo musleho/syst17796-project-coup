@@ -103,10 +103,11 @@ public class App {
                         catch (InsufficientCoinsException e) {
                             Tools.showMessage("Sorry, you don't have enough coins to do that.\n", 1.25);
                             Tools.showMessage("Let's try again.\n", 0.5);
+                            Tools.showOnlyMessage("",0); //clear the console before showing the info again.
                             sufficientCoins = false;
                         }
                         catch (ArrayIndexOutOfBoundsException e){ //This gets triggered if player enters 0 - checks hand.
-                            Game.showCards(activePlayer); //This is a bad way to code this...
+                            Game.showCards(activePlayer); //This is probably a bad way to code this...
                         }
                     }
                 }
@@ -169,11 +170,13 @@ public class App {
 
                 if (!challengeSuccessful && !blockSuccessful) {//both the challenge and the block have to be passed in order to execute.
                     declaredEffect.execute(targetPlayer); //do the effect to the target player (which is the active player if effect is not targeted)
-                    activePlayer.spendCoins(declaredEffect.getCost()); //spend the coins
+                    try{activePlayer.spendCoins(declaredEffect.getCost());} //spend the coins
+                    catch(InsufficientCoinsException e){e.printStackTrace();} //theoretically shouldn't trigger since we check before declaration.
                 }
                 
                 else if (blockSuccessful && declaredEffect instanceof Assassinate){ //blocking assassinate still spends the coins
-                    activePlayer.spendCoins(3);
+                    try{activePlayer.spendCoins(3);}
+                    catch(InsufficientCoinsException e){e.printStackTrace();} //theoretically shouldn't trigger since we check before declaration.
                 }
                 
                 Game.updatePlayerList();
@@ -201,7 +204,7 @@ public class App {
             Tools.showMessage("\n# " + i + ".", 0.5);
             Tools.showMessage(".", 0.5);
             Tools.showMessage(". ", 0.5);
-            Tools.showMessage(Game.ALL_PLAYERS.get(i-1) + "!", 2);
+            Tools.showMessage(Game.ALL_PLAYERS.get(i-1).getName() + "!", 2);
         }
     }
 }

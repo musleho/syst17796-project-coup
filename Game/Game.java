@@ -67,7 +67,14 @@ public abstract class Game {
         System.out.print("Please enter the name for Player " + (currentIndex + 1) + ". ");
         System.out.print("Note - Player names cannot contain spaces: ");
         String playerName = Tools.input.next();
-        ALL_PLAYERS.add(new Player(playerName, currentIndex));
+        try { //if we CAN find the player name, then re-call registerPlayer and try to get a different name.
+            Player checkPlayer = findAnyPlayer(playerName);
+            System.out.println("\nSorry, the name " + checkPlayer.getName() + " is already taken.");
+            registerPlayer();
+        }
+        catch (PlayerNotFoundException e){ //if the player CANNOT be found, add them to the player list.
+            ALL_PLAYERS.add(new Player(playerName, currentIndex));
+        }
     }
 
     public static void registerPlayer(String name){ //for debugging, to skip the whole registration process
