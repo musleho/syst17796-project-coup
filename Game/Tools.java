@@ -26,7 +26,7 @@ public abstract class Tools {
     }
 
     public static void showOnlyMessage(String message, double seconds) {
-        /*Clears the console before performing showMessage*/
+        /**Clears the console before performing showMessage*/
         clearConsole();
         showMessage(message, seconds);
     }

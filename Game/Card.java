@@ -4,7 +4,7 @@ import Exceptions.InvalidNameException;
 
 public class Card {
     public static final String[] validNames = {"Ambassador", "Assassin", "Captain", "Contessa", "Duke"};
-    private final String name;
+    private String name;
     private String effect;
     private String counteraction;
 

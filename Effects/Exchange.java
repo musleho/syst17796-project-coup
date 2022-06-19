@@ -37,7 +37,8 @@ public class Exchange extends Effect {
 
     public void execute(Player targetPlayer) { // seriously, fuck this effect...
         // Sets up the array lists of cards that will be used.
-        ArrayList<Card> newCards = new ArrayList<>(2);
+
+        ArrayList<Card> newCards = new ArrayList<Card>(2);
         newCards.add(deck.drawCard());
         newCards.add(deck.drawCard());
         ArrayList<Card> playerHand = targetPlayer.getHand();
