@@ -5,9 +5,8 @@ import java.util.Collections;
 import Exceptions.InvalidNameException;
 
 public class Deck {
-    private ArrayList<Card> activeCards = new ArrayList<Card>();
-    private ArrayList<Card> discardPile = new ArrayList<Card>();
-
+    private final ArrayList<Card> activeCards = new ArrayList<Card>();
+    private final ArrayList<Card> discardPile = new ArrayList<Card>();
     
     public Deck() {
         buildDeck();
@@ -53,7 +52,6 @@ public class Deck {
         }
     }
 
-    /**@EndOfRoundMethod*/
     public void resetDeck() {
         activeCards.clear();
         discardPile.clear();

@@ -4,12 +4,11 @@ import Exceptions.*;
 import Effects.*;
 import java.util.Collections;
 
-//This will eventually be the application file. For now it can serve as a sort of test playground.
+
 public class App {
 
     public static void main(String[] args) {
         //Game initiation logic
-
         Deck deck = Game.deck;
         Tools.showOnlyMessage("Welcome to JavaCoup!\n", 1.5);
         
@@ -48,7 +47,8 @@ public class App {
                 player.drawCard(deck);
                 Game.showCards(player);
             }
-            // int turnCount = 0;
+
+            //Figures out who the first player will be.
             Player activePlayer = null;
             if (roundWinner == null) {
                 double rand = Math.random()*Game.ALL_PLAYERS.size();
@@ -61,9 +61,9 @@ public class App {
             }
 
             roundWinner = null; //reset the roundWinner (if needed) so the turns loop executes.
+            
             //Turn logic
             while(roundWinner == null){
-                // int numPlayers = Game.PLAYERS.size(); // gets the number of living players each turn
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
@@ -81,12 +81,12 @@ public class App {
                 boolean sufficientCoins = true; //flips to false if declareEffect throws InsufficientCoinsException
                 Effect declaredEffect = Game.EFFECTS[2]; //default to coup until properly overwritten
                 if (activePlayer.getCoins() >= 10){ //force a coup if the player has 10 or more coins.
-                    for (Player player : Game.PLAYERS) { //for debugging
+                    for (Player player : Game.PLAYERS) {
                         System.out.println(player.info());
                     }
                 }
                 else { //otherwise get the input for the effect the player wants to declare.
-                    while (playerChoice == 0 || sufficientCoins == false) {
+                    while (playerChoice == 0 || !sufficientCoins) {
                         Tools.showTable();
                         for (Player player : Game.PLAYERS) { //for debugging
                             System.out.println(player.info());
@@ -103,10 +103,11 @@ public class App {
                         catch (InsufficientCoinsException e) {
                             Tools.showMessage("Sorry, you don't have enough coins to do that.\n", 1.25);
                             Tools.showMessage("Let's try again.\n", 0.5);
+                            Tools.showOnlyMessage("",0); //clear the console before showing the info again.
                             sufficientCoins = false;
                         }
                         catch (ArrayIndexOutOfBoundsException e){ //This gets triggered if player enters 0 - checks hand.
-                            Game.showCards(activePlayer); //This is a bad way to code this...
+                            Game.showCards(activePlayer); //This is probably a bad way to code this...
                         }
                     }
                 }
@@ -137,7 +138,7 @@ public class App {
                 }
 
                 boolean blockSuccessful = false;
-                if (!challengeIssued){ //blocking only relevent when a challenge was not issued.
+                if (!challengeIssued){ //blocking only relevant when a challenge was not issued.
                     if(declaredEffect.isBlockable()){
                         if (declaredEffect instanceof ForeignAid) {  
                             for (Player player : otherPlayers) {
@@ -169,11 +170,13 @@ public class App {
 
                 if (!challengeSuccessful && !blockSuccessful) {//both the challenge and the block have to be passed in order to execute.
                     declaredEffect.execute(targetPlayer); //do the effect to the target player (which is the active player if effect is not targeted)
-                    activePlayer.spendCoins(declaredEffect.getCost()); //spend the coins
+                    try{activePlayer.spendCoins(declaredEffect.getCost());} //spend the coins
+                    catch(InsufficientCoinsException e){e.printStackTrace();} //theoretically shouldn't trigger since we check before declaration.
                 }
                 
                 else if (blockSuccessful && declaredEffect instanceof Assassinate){ //blocking assassinate still spends the coins
-                    activePlayer.spendCoins(3);
+                    try{activePlayer.spendCoins(3);}
+                    catch(InsufficientCoinsException e){e.printStackTrace();} //theoretically shouldn't trigger since we check before declaration.
                 }
                 
                 Game.updatePlayerList();
@@ -189,7 +192,7 @@ public class App {
             String cont = Tools.promptInput("Would you like to play another round [y/n]: ",
                                         "Sorry, I didn't get that. Would you like to play another round [y/n]",
                                         yN);
-            stillPlaying = cont.toLowerCase().equals("y");
+            stillPlaying = cont.equalsIgnoreCase("y");
             deck.resetDeck();
             Game.resetActivePlayers();
         }
@@ -201,7 +204,7 @@ public class App {
             Tools.showMessage("\n# " + i + ".", 0.5);
             Tools.showMessage(".", 0.5);
             Tools.showMessage(". ", 0.5);
-            Tools.showMessage(Game.ALL_PLAYERS.get(i) + "!", 2);
+            Tools.showMessage(Game.ALL_PLAYERS.get(i-1).getName() + "!", 2);
         }
     }
 }

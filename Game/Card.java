@@ -11,27 +11,27 @@ public class Card {
     public Card (String name) throws InvalidNameException{
         if(isValidName(name)) {
             this.name = name;
-            switch(name) {
-                case "Ambassador":
+            switch (name) {
+                case "Ambassador" -> {
                     this.effect = "exchange";
                     this.counteraction = "block steal";
-                    break;
-                case "Assassin":
+                }
+                case "Assassin" -> {
                     this.effect = "assassinate";
                     this.counteraction = "N/A";
-                    break;
-                case "Captain":
+                }
+                case "Captain" -> {
                     this.effect = "steal";
                     this.counteraction = "block steal";
-                    break;
-                case "Contessa":
+                }
+                case "Contessa" -> {
                     this.effect = "N/A";
                     this.counteraction = "block assassinate";
-                    break;
-                case "Duke":
+                }
+                case "Duke" -> {
                     this.effect = "tax";
                     this.counteraction = "block foreign aid";
-                    break;
+                }
             }
         }
         else throw new InvalidNameException();

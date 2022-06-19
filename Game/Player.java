@@ -48,14 +48,18 @@ public class Player implements Comparable<Player>{
         hand.clear();
     }
 
-    public void spendCoins(int num) {
-        coins -= num; //should add exception handling so cannot spend more coins than available
+    public void spendCoins(int num) throws InsufficientCoinsException{
+        if (num <= coins){coins -= num;}
+        else throw new InsufficientCoinsException();
     }
 
     public void drawCard(Deck deck){
-        this.hand.add(deck.drawCard());
+        hand.add(deck.drawCard());
     }
 
+    //KNOWN ISSUE - When a player has both the Ambassador and the Captain and they block stealing,
+    //the game has no way of knowing which card the player would rather swap and will simply
+    //pick the first one it finds in their hand. Need to think about how to fix that....
     public void swapCards(Deck deck, int cardIndex) {
         if (cardIndex >= 0 && cardIndex < hand.size()) {
             Card oldCard = hand.get(cardIndex);
@@ -63,14 +67,14 @@ public class Player implements Comparable<Player>{
             hand.remove(cardIndex);
             deck.shuffle();
             drawCard(deck);
-            Tools.showMessage("\n" + this.name + " has swapped cards. Preparing to show new hand...\n", 2);
-            Game.showCards(this); //should be replaced with something a bit more elegant.
+            Tools.showMessage("\n" + this.name + " has swapped cards. Preparing to show new hand...\n", 1.5);
+            Game.showCards(this);
         }
     }
 
     public Effect declareEffect(int effect) throws InsufficientCoinsException{
         Effect eff = Game.EFFECTS[effect - 1];
-        if (this.coins >= eff.getCost()) 
+        if (coins >= eff.getCost()) 
             return Game.EFFECTS[effect - 1];
         else throw new InsufficientCoinsException();
         //determine if effect is bluff or not
@@ -104,8 +108,10 @@ public class Player implements Comparable<Player>{
             int cardIndex = 0;
             
             //gets player choice on which card to reveal if they have more than one card.
+            //technically puts view in the model, may need to revise implementation
             if(influence == 2) {     
-                System.out.println(name + ", please choose a card to lose.");
+                Tools.showOnlyMessage(name + " will have to choose a card to discard. If this is you, press enter to continue", 0.5);
+                Tools.input.nextLine();
                 String prompt = "Type '1' to lose your " + hand.get(0).getName() + " or type '2' to lose your " + hand.get(1).getName() + ": ";
                 String[] validInputs = {"1", "2"};
                 cardIndex = Integer.parseInt(Tools.promptInput(prompt, "Sorry, I didn't understand that. " + prompt, validInputs)) - 1;
@@ -128,8 +134,8 @@ public class Player implements Comparable<Player>{
     }
 
     public int compareTo(Player player) {
-        if(player.getScore() > this.score) return -1;
-        else if (player.getScore() < this.score) return 1;
+        if(player.getScore() > this.score) return 1;
+        else if (player.getScore() < this.score) return -1;
         else return 0;
     }
 
@@ -141,7 +147,7 @@ public class Player implements Comparable<Player>{
         else {return "Player " + (this.number + 1) + " (" + this.name + ") is exiled.";}
     }
 
-    public String toString() {
+    public String toString() { //primarily a debugging tool
         String cards = "";
         if (hand.size() > 0) {
             for (Card card : hand){

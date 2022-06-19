@@ -9,8 +9,8 @@ public abstract class Effect {
      * Targeted: A given effect targets another player (true)
      * Cost: Number of coins needed to execute the action
      */
-    private String name;
-    private boolean refutable,blockable,targeted;
+    private final String name;
+    private final boolean refutable,blockable,targeted;
     private int cost;
     
     public Effect(String name, boolean refutable, boolean blockable, boolean targeted, int cost){
@@ -34,26 +34,7 @@ public abstract class Effect {
 
     public int getCost() {return cost;}
 
-    public void setCost(int cost) {this.cost = cost;} //did I ever call this?
-
-    //Generic methods
-    public abstract String toString();
-
-    public boolean equals(Effect eff){
-        return this.name.equals(eff.getName());
-    }
-
-    public boolean isRefutable() {
-        return refutable;
-    }
-
-    public boolean isBlockable() {
-        return blockable;
-    }
-
-    public int getCost() {
-        return cost;
-    }
+    public void setCost(int cost) {this.cost = cost;}
 
     public abstract String toString();
 }

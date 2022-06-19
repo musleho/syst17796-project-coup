@@ -38,12 +38,6 @@ public abstract class Game {
         else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
     }
 
-    public static void showAllCoins() {
-        for (Player player : PLAYERS) {
-            System.out.println("\n" + player.getName() + " has " + player.getCoins() + " coins.");
-        }
-    }
-
     public static int checkEffectBluff(Player player, String effect) {
         if (effect.equals("income") || effect.equals("foreign aid") || effect.equals("coup")) return 2; //if the effect isn't refutable
         else {
@@ -73,7 +67,14 @@ public abstract class Game {
         System.out.print("Please enter the name for Player " + (currentIndex + 1) + ". ");
         System.out.print("Note - Player names cannot contain spaces: ");
         String playerName = Tools.input.next();
-        ALL_PLAYERS.add(new Player(playerName, currentIndex));
+        try { //if we CAN find the player name, then re-call registerPlayer and try to get a different name.
+            Player checkPlayer = findAnyPlayer(playerName);
+            System.out.println("\nSorry, the name " + checkPlayer.getName() + " is already taken.");
+            registerPlayer();
+        }
+        catch (PlayerNotFoundException e){ //if the player CANNOT be found, add them to the player list.
+            ALL_PLAYERS.add(new Player(playerName, currentIndex));
+        }
     }
 
     public static void registerPlayer(String name){ //for debugging, to skip the whole registration process
@@ -102,7 +103,7 @@ public abstract class Game {
     }
 
     public static String getWinner() {
-        /**
+        /*
          * Checks if only one active player is left at the end of the round.
          * If so, prints a message returns that player's name as a string.
          * Otherwise, returns null.
@@ -122,7 +123,7 @@ public abstract class Game {
         catch (PlayerNotFoundException e) {e.printStackTrace();}
         for (int i = 0; i < ALL_PLAYERS.size(); i++){
             if (!expectedPlayer.isAlive()) {
-                expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum);
+                expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum % ALL_PLAYERS.size());
                 System.out.println("next player"); //for debugging
             } 
             else break;
@@ -132,7 +133,7 @@ public abstract class Game {
 
     public static Player findLivingPlayer(String name) throws PlayerNotFoundException{
         for(Player player : PLAYERS) {
-            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+            if (player.getName().equalsIgnoreCase(name))
                 return player;
         }
         
@@ -141,7 +142,7 @@ public abstract class Game {
 
     public static Player findAnyPlayer(String name) throws PlayerNotFoundException{
         for(Player player : ALL_PLAYERS) {
-            if (player.getName().toLowerCase().equals(name.toLowerCase()))
+            if (player.getName().equalsIgnoreCase(name))
                 return player;
         }
         
