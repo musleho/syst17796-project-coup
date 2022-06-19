@@ -129,3 +129,6 @@ Have fun.
 
 #### Acknowledgement
 The rules as given here are adapted from https://www.ultraboardgames.com/coup/game-rules.php
+
+## Known Issues:
+When a player is challenged after blocking a steal attempt, they may have BOTH an Ambassador and a Captain in their hand. Since the challenge will be unsuccessful, the blocking player will have to swap one of the cards in their hand. Presently, the game has no way of allowing the player to choose which of these two cards will be swapped and will instead automatically choose the first card in the player's hand.
