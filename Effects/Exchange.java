@@ -12,7 +12,6 @@ public class Exchange extends Effect {
     }
 
     private int findCard(String name, ArrayList<Card> cardList){
-
         /*
          * Gets the index of a card in a given list based on its name.
          * Uses linear search so returns the first such instance if there are more than one.
@@ -21,7 +20,6 @@ public class Exchange extends Effect {
         if (cardList.size() > 0) {
             for (int i = 0; i < cardList.size(); i++){
                 if(cardList.get(i).getName().equalsIgnoreCase(name)) {return i;}
-
             }
             return -1; //if the name is not in the list
         }
@@ -39,6 +37,7 @@ public class Exchange extends Effect {
 
     public void execute(Player targetPlayer) { // seriously, fuck this effect...
         // Sets up the array lists of cards that will be used.
+
         ArrayList<Card> newCards = new ArrayList<Card>(2);
         newCards.add(deck.drawCard());
         newCards.add(deck.drawCard());

@@ -4,7 +4,6 @@ import Exceptions.*;
 import Effects.*;
 import java.util.Collections;
 
-
 public class App {
 
     public static void main(String[] args) {
