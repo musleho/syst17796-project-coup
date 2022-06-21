@@ -1,8 +1,8 @@
-package Game;
+package src.Game;
 
 import java.util.ArrayList;
-import Effects.*;
-import Exceptions.InsufficientCoinsException;
+import src.Effects.*;
+import src.Exceptions.InsufficientCoinsException;
 
 public class Player implements Comparable<Player>{
     private String name;

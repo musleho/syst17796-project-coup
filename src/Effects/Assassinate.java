@@ -1,7 +1,7 @@
-package Effects;
+package src.Effects;
 
-import Game.Player;
-import Game.Deck;
+import src.Game.Player;
+import src.Game.Deck;
 
 public class Assassinate extends Effect{
 

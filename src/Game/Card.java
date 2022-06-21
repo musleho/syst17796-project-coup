@@ -1,5 +1,5 @@
-package Game;
-import Exceptions.InvalidNameException;
+package src.Game;
+import src.Exceptions.InvalidNameException;
 
 
 public class Card {

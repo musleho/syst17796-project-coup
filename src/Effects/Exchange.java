@@ -1,6 +1,6 @@
-package Effects;
+package src.Effects;
 
-import Game.*;
+import src.Game.*;
 import java.util.ArrayList;
 
 public class Exchange extends Effect {

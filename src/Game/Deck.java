@@ -1,8 +1,8 @@
-package Game;
+package src.Game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import Exceptions.InvalidNameException;
+import src.Exceptions.InvalidNameException;
 
 public class Deck {
     private final ArrayList<Card> activeCards = new ArrayList<Card>();

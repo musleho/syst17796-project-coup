@@ -1,7 +1,7 @@
-package Game;
+package src.Game;
 
-import Effects.*;
-import Exceptions.*;
+import src.Effects.*;
+import src.Exceptions.*;
 import java.util.*;
 
 // A static helper class to the App.java application.

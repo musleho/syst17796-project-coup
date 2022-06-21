@@ -1,6 +1,6 @@
-package Effects;
+package src.Effects;
 
-import Game.Player;
+import src.Game.Player;
 
 public class Income extends Effect {
     

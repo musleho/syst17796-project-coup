@@ -1,7 +1,7 @@
-package Game;
+package src.Game;
 
-import Exceptions.*;
-import Effects.*;
+import src.Exceptions.*;
+import src.Effects.*;
 import java.util.Collections;
 
 public class App {

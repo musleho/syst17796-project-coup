@@ -1,4 +1,4 @@
-package Exceptions;
+package src.Exceptions;
 
 public final class InvalidNameException extends Exception {
     public InvalidNameException() {

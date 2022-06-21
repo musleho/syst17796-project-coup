@@ -1,7 +1,7 @@
-package Effects;
+package src.Effects;
 
-import Exceptions.InsufficientCoinsException;
-import Game.Player;
+import src.Exceptions.InsufficientCoinsException;
+import src.Game.Player;
 
 public class Steal extends Effect {
     /**Steals two coins from another player */
