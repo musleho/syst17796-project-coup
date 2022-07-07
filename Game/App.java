@@ -63,7 +63,6 @@ public class App {
             
             //Turn logic
             while(roundWinner == null){
-                Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
 
@@ -86,6 +85,7 @@ public class App {
                 }
                 else { //otherwise get the input for the effect the player wants to declare.
                     while (playerChoice == 0 || !sufficientCoins) {
+                        Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                         Tools.showTable();
                         for (Player player : Game.PLAYERS) { //for debugging
                             System.out.println(player.info());
