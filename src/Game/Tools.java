@@ -26,7 +26,7 @@ public abstract class Tools {
     }
 
     public static void showOnlyMessage(String message, double seconds) {
-        /**Clears the console before performing showMessage*/
+        /*Clears the console before performing showMessage*/
         clearConsole();
         showMessage(message, seconds);
     }
@@ -43,7 +43,7 @@ public abstract class Tools {
                 System.out.print(statement);
                 userInput = input.nextLine();
                 for (String validInput : validInputs) {
-                    if (userInput.toLowerCase().equals(validInput.toLowerCase())){
+                    if (userInput.equalsIgnoreCase(validInput)){
                         valid = true;
                         break;
                     }

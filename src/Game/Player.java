@@ -1,13 +1,15 @@
 package src.Game;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
 import src.Effects.*;
 import src.Exceptions.InsufficientCoinsException;
 
 public class Player implements Comparable<Player>{
     private String name;
     private int number; //keeps track of this player's index in the list of all registered players
-    private ArrayList<Card> hand = new ArrayList<Card>();
+    private final ArrayList<Card> hand = new ArrayList<>();
     private int coins;
     private int influence;
     private boolean alive;
@@ -57,7 +59,7 @@ public class Player implements Comparable<Player>{
         hand.add(deck.drawCard());
     }
 
-    //KNOWN ISSUE - When a player has both the Ambassador and the Captain and they block stealing,
+    //KNOWN ISSUE - When a player has both the Ambassador and the Captain, and they block stealing,
     //the game has no way of knowing which card the player would rather swap and will simply
     //pick the first one it finds in their hand. Need to think about how to fix that....
     public void swapCards(Deck deck, int cardIndex) {
@@ -134,9 +136,7 @@ public class Player implements Comparable<Player>{
     }
 
     public int compareTo(Player player) {
-        if(player.getScore() > this.score) return 1;
-        else if (player.getScore() < this.score) return -1;
-        else return 0;
+        return Integer.compare(player.getScore(), this.score);
     }
 
     public String info() {
@@ -148,10 +148,10 @@ public class Player implements Comparable<Player>{
     }
 
     public String toString() { //primarily a debugging tool
-        String cards = "";
+        StringBuilder cards = new StringBuilder();
         if (hand.size() > 0) {
             for (Card card : hand){
-                cards += " " + card.getName();
+                cards.append(" ").append(card.getName());
             }
         }
         return "Player Name: " + this.name + "\n" +
@@ -164,7 +164,7 @@ public class Player implements Comparable<Player>{
     }
 
     public boolean equals(Player player){
-        return this.name == player.name;
+        return Objects.equals(this.name, player.name);
     }
 
     public boolean isAlive() {return this.alive;}

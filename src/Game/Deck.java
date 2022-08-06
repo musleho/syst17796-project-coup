@@ -5,11 +5,20 @@ import java.util.Collections;
 import src.Exceptions.InvalidNameException;
 
 public class Deck {
-    private final ArrayList<Card> activeCards = new ArrayList<Card>();
-    private final ArrayList<Card> discardPile = new ArrayList<Card>();
+    private final ArrayList<Card> activeCards = new ArrayList<>();
+    private final ArrayList<Card> discardPile = new ArrayList<>();
+
+    private static Deck deck;
     
-    public Deck() {
+    private Deck() {
         buildDeck();
+    }
+
+    public static Deck getInstance() {
+        if (deck == null) {
+            deck = new Deck();
+        }
+        return deck;
     }
 
     public void buildDeck() {
@@ -23,12 +32,6 @@ public class Deck {
 
     public void shuffle() {
         Collections.shuffle(activeCards);
-    }
-
-    public void showCards() {
-        for (Card card : activeCards){
-            System.out.println(card.getName());
-        }
     }
 
     public Card drawCard() {

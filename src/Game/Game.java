@@ -9,10 +9,10 @@ import java.util.*;
 // The Tools class handles generic functions like getting valid inputs and printing messages
 // while the App class runs and handles the flow of gameplay.
 public abstract class Game {
-    public static final Deck deck = new Deck();
+    public static final Deck deck = Deck.getInstance();
     public static final Effect[] EFFECTS = {new Income(), new ForeignAid(), new Coup(deck), new Tax(), new Assassinate(deck), new Exchange(deck), new Steal()};
-    public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<Player>();
-    public static final ArrayList<Player> PLAYERS = new ArrayList<Player>();
+    public static final ArrayList<Player> ALL_PLAYERS = new ArrayList<>();
+    public static final ArrayList<Player> PLAYERS = new ArrayList<>();
 
     public static void showCards(Player player) {
         if (player.getHand().size() > 0) {
@@ -55,13 +55,6 @@ public abstract class Game {
         return -1; //if blocker is bluffing
     }
 
-    public static Card findCardByName(Player player, String cardName) throws InvalidNameException{
-        for (Card card : player.getHand()) {
-            if (card.getName().equals(cardName)) return card;
-        }
-        throw new InvalidNameException();
-    }
-
     public static void registerPlayer(){
         int currentIndex = ALL_PLAYERS.size();
         System.out.print("Please enter the name for Player " + (currentIndex + 1) + ". ");
@@ -75,11 +68,6 @@ public abstract class Game {
         catch (PlayerNotFoundException e){ //if the player CANNOT be found, add them to the player list.
             ALL_PLAYERS.add(new Player(playerName, currentIndex));
         }
-    }
-
-    public static void registerPlayer(String name){ //for debugging, to skip the whole registration process
-        int currentIndex = ALL_PLAYERS.size();
-        ALL_PLAYERS.add(new Player(name, currentIndex));
     }
 
     public static Player[] findWaitingPlayers(Player activePlayer) {
@@ -122,6 +110,7 @@ public abstract class Game {
         try {expectedPlayer = findPlayerByNum(turnPlayerNum);}
         catch (PlayerNotFoundException e) {e.printStackTrace();}
         for (int i = 0; i < ALL_PLAYERS.size(); i++){
+            assert expectedPlayer != null;
             if (!expectedPlayer.isAlive()) {
                 expectedPlayer = ALL_PLAYERS.get(++turnPlayerNum % ALL_PLAYERS.size());
                 System.out.println("next player"); //for debugging

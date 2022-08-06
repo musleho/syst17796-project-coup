@@ -7,6 +7,10 @@ import java.util.Collections;
 public class App {
 
     public static void main(String[] args) {
+        run();
+    }
+
+    private static void run() {
         //Game initiation logic
         Deck deck = Game.deck;
         Tools.showOnlyMessage("Welcome to JavaCoup!\n", 1.5);
@@ -63,6 +67,7 @@ public class App {
             
             //Turn logic
             while(roundWinner == null){
+                assert activePlayer != null;
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
                 
                 Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.

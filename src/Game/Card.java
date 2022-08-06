@@ -59,7 +59,4 @@ public class Card {
              + "Counteraction: " + this.counteraction + "\n";
     }
 
-    public boolean equals(Card card){
-        return card.name.equals(this.name);
-    }
 }
