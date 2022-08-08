@@ -1,4 +1,4 @@
-package src. Exceptions;
+package Exceptions;
 
 public final class InsufficientCoinsException extends Exception {
     public InsufficientCoinsException(){

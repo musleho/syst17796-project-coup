@@ -1,6 +1,6 @@
-package src.Effects;
+package Effects;
 
-import src.Game.Player;
+import Game.Player;
 
 public abstract class Effect {
     /**
