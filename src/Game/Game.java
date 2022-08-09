@@ -1,7 +1,6 @@
 package Game;
 
 import Effects.*;
-import Exceptions.*;
 import java.util.*;
 
 // A static helper class to the App.java application.
@@ -46,6 +45,9 @@ public abstract class Game {
         else Tools.showOnlyMessage(player.getName() + " has no cards left.", 0);
     }
 
+    //good --> effect corresponding to card in player's hand (assert equals 0 or 1)
+    //bad --> effect corresponding to card not in player's hand (assert equals -1)
+    //TODO boundary case for checkEffectBluff
     public static int checkEffectBluff(Player player, String effect) {
         if (effect.equals("income") || effect.equals("foreign aid") || effect.equals("coup")) return 2; //if the effect isn't refutable
         else {
@@ -56,6 +58,9 @@ public abstract class Game {
         }
     }
 
+    //good --> effect corresponding to card in player's hand (assert equals 0 or 1)
+    //bad --> effect corresponding to card not in player's hand (assert equals -1)
+    //TODO boundary case for checkCounteractBluff
     public static int checkCounteractBluff(Player player, String counteract) {
         for (int i = 0; i < player.getHand().size(); i++){
             if(player.getHand().get(i).getCounteraction().equals(counteract)) return i; //if blocker is not bluffing, 
@@ -63,13 +68,21 @@ public abstract class Game {
         return -1; //if blocker is bluffing
     }
 
-    private static boolean registerPlayer(String playerName, int currentIndex){
+    //good case --> unique name
+    //bad case --> repeated name
+    //TODO boundary case for registerPlayer
+    public static boolean registerPlayer(String playerName, int currentIndex){
         if (findAnyPlayer(playerName) == null) {
             ALL_PLAYERS.add(new Player(playerName, currentIndex));
             return true;
         }
         return false;
     }
+
+    //notes: empty the existing player list and rebuild it with this method
+    //good --> pass 5, check at end to ensure all players registered with correct name (then rebuild it automatically)
+    //bad --> pass 8, check at end to ensure list is still empty (then rebuild it automatically)
+    //boundary --> pass 6, check at end to ensure all players registered with correct name
 
     public static void registerPlayers(int numPlayers) {
         if (numPlayers >= 3 && numPlayers <= 6) {
@@ -88,6 +101,21 @@ public abstract class Game {
         }
     }
 
+    //good --> pick any player as active, assert equals an array containing all other players
+    //bad --> leave only one player, assert equals should match empty array
+    //boundary --> only two players in array, should only return one other player
+    /* Example of unit test:
+    Player activePlayer = Game.PLAYERS.get(0);
+    Player[] expectedResult = {Game.PLAYERS.get(1),
+        Game.PLAYERS.get(2),
+
+    };
+    Player[] actual = Game.findWaitingPlayers(activePlayer);
+    for (Player player : actual) {
+        assertequals
+    }
+     */
+
     public static Player[] findWaitingPlayers(Player activePlayer) {
         Player[] waitingPlayers = new Player[PLAYERS.size() - 1];
         int otherPlayersIndex = 0;
@@ -99,7 +127,7 @@ public abstract class Game {
         return waitingPlayers;
     }
 
-
+    //good --> assertEquals PLAYERS, ALL_PLAYERS
     public static void resetActivePlayers() {
         PLAYERS.clear();
         PLAYERS.addAll(ALL_PLAYERS);
@@ -108,6 +136,7 @@ public abstract class Game {
         }
     }
 
+    //does not need unit test
     public static String getWinner() {
         /*
          * Checks if only one active player is left at the end of the round.
@@ -122,11 +151,23 @@ public abstract class Game {
         return null;
     }
 
+    //good --> all players alive, should move to next player
+    //bad --> next player not alive, should move to subsequent player
+    //boundary --> all but first and last player are alive, should go from first to last
+    /*Example unit test
+    Player lastPlayer = Game.PLAYERS.get(0);
+    Player nextPlayer = findTurnPlayer(lastPlayer);
+    assertEquals(nextPlayer, Game.PLAYERS.get(1));
+
+    Player lastPlayer = Game.PLAYERS.get(0);
+    Game.PLAYERS.get(1).setAlive(false); // kill player 2 so FTP method should return player 3
+    Player nextPlayer = findTurnPlayer(lastPlayer);
+    assertEquals(nextPlayer,Game.PLAYERS.get(2));
+     */
     public static Player findTurnPlayer(Player lastPlayer) {
         int turnPlayerNum = (lastPlayer.getNumber() + 1) % ALL_PLAYERS.size();
-        Player expectedPlayer = null;
-        try {expectedPlayer = findPlayerByNum(turnPlayerNum);}
-        catch (PlayerNotFoundException e) {e.printStackTrace();}
+        Player expectedPlayer;
+        expectedPlayer = findPlayerByNum(turnPlayerNum);
         for (int i = 0; i < ALL_PLAYERS.size(); i++){
             assert expectedPlayer != null;
             if (!expectedPlayer.isAlive()) {
@@ -137,6 +178,8 @@ public abstract class Game {
         return expectedPlayer;
     }
 
+    //good --> input name of a living player
+    //bad --> input name of a non-living player
     public static Player findLivingPlayer(String name){
         for(Player player : PLAYERS) {
             if (player.getName().equalsIgnoreCase(name))
@@ -146,6 +189,8 @@ public abstract class Game {
         return null;
     }
 
+    //good --> input name of a registered player
+    //bad --> input name of a non-registered player
     public static Player findAnyPlayer(String name){
         for(Player player : ALL_PLAYERS) {
             if (player.getName().equalsIgnoreCase(name))
@@ -155,12 +200,15 @@ public abstract class Game {
         return null;
     }
 
-    public static Player findPlayerByNum(int num) throws PlayerNotFoundException{
+    //good --> pass num that is in range of registered players e.g. 4 (assertEquals Game.PLAYERS.get(4))
+    //bad --> pass num that is not in range, should return null
+    //boundary --> pass ALL_PLAYERS.size() or 0.
+    public static Player findPlayerByNum(int num){
         for(Player player : ALL_PLAYERS) {
             if (player.getNumber() == num) return player;
         }
 
-        throw new PlayerNotFoundException();
+        return null;
     }
 
     public static Player setTargetPlayer(Player activePlayer, Effect declaredEffect) {
@@ -263,23 +311,23 @@ public abstract class Game {
     }
 
     private static Player findStartingPlayer(String roundWinner) {
-        Player activePlayer = null;
+        Player activePlayer;
         if (roundWinner == null) {
             double rand = Math.random()*Game.ALL_PLAYERS.size();
-            try {activePlayer = Game.findPlayerByNum((int)(Math.floor(rand)));}
-            catch (PlayerNotFoundException e){e.printStackTrace();} //would be weird if this triggered.
+            activePlayer = Game.findPlayerByNum((int)(Math.floor(rand)));
         }
         else activePlayer = findAnyPlayer(roundWinner);
         return activePlayer;
     }
 
     //DEBUG/TESTING METHODS
-    public static Player autoStart(int numPlayers) {
+    public static void autoStart(int numPlayers) {
+        ALL_PLAYERS.clear();
         String[] playerNames = {"Alejandro, Jolana, Ali, Kushy, Martin, Jamal"};
         for (int i = 0; i < numPlayers; i++) {
             Game.registerPlayer(playerNames[i], i);
         }
-        return startRound(null);
+        resetActivePlayers();
+        distributeCards();
     }
-
 }
