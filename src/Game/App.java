@@ -1,8 +1,9 @@
-package src.Game;
+package Game;
 
-import src.Exceptions.*;
-import src.Effects.*;
+import Exceptions.*;
+import Effects.*;
 import java.util.Collections;
+import java.util.Objects;
 
 public class App {
 
@@ -28,58 +29,21 @@ public class App {
                           validNumPlayers);
         
         int plyrCount = Integer.parseInt(rawPlayerCount);
-        for (int i = 1; i <= plyrCount; i++) {
-            Game.registerPlayer();
-            System.out.println("Thanks for joining, " + Game.ALL_PLAYERS.get(Game.ALL_PLAYERS.size()-1).getName() + "!");
-            if (i < plyrCount) {
-                System.out.println("Please press enter and pass the computer to the next registrant.");
-                Tools.input.nextLine(); 
-            }
-            Tools.input.nextLine();
-        }
+        Game.registerPlayers(plyrCount);
 
         //Rounds loop
         boolean stillPlaying = true;
         String roundWinner = null;
         while(stillPlaying){
+            Player activePlayer = Game.startRound(roundWinner);
             //Round Initiation
-            Game.resetActivePlayers(); //Puts all registered players into active players list and reset their fields.
-            deck.shuffle(); //shuffle the deck.
-            for(Player player : Game.PLAYERS) { //Each player draws two cards;
-                player.drawCard(deck);
-                player.drawCard(deck);
-                Game.showCards(player);
-            }
-
-            //Figures out who the first player will be.
-            Player activePlayer = null;
-            if (roundWinner == null) {
-                double rand = Math.random()*Game.ALL_PLAYERS.size();
-                try {activePlayer = Game.findPlayerByNum((int)(Math.floor(rand)));}
-                catch (PlayerNotFoundException e){e.printStackTrace();} //would be weird if this triggered.
-            }
-            else {
-                try {activePlayer = Game.findAnyPlayer(roundWinner);}
-                catch (PlayerNotFoundException e) {e.printStackTrace();}
-            }
-
             roundWinner = null; //reset the roundWinner (if needed) so the turns loop executes.
             
             //Turn logic
             while(roundWinner == null){
                 assert activePlayer != null;
                 Tools.showOnlyMessage("It is now " + activePlayer.getName() + "'s turn.\n\n", 3);
-                
-                Player[] otherPlayers = Game.findWaitingPlayers(activePlayer); //the list of non-active player objects.
 
-                Player[] activePlayerAsArr = {activePlayer}; //to pass activePlayer as array into processChallenges() call.
-                
-                String[] otherPlayerNames = new String[otherPlayers.length]; //names of non-active players for validation
-                for (int i = 0; i < otherPlayerNames.length; i++) {
-                    otherPlayerNames[i] = otherPlayers[i].getName();
-                    // System.out.println(otherPlayers[i]);
-                }
-                
                 String[] validEffects = {"0", "1", "2", "3", "4", "5", "6", "7"};
                 int playerChoice = 0;
                 boolean sufficientCoins = true; //flips to false if declareEffect throws InsufficientCoinsException
@@ -111,65 +75,36 @@ public class App {
                             sufficientCoins = false;
                         }
                         catch (ArrayIndexOutOfBoundsException e){ //This gets triggered if player enters 0 - checks hand.
-                            Game.showCards(activePlayer); //This is probably a bad way to code this...
+                            Game.showCards(activePlayer);
                         }
                     }
                 }
                 Tools.showMessage(activePlayer.getName() + " has declared " + declaredEffect.getName() + "!\n", 2.5);
                 
                 int cardFlag = Game.checkEffectBluff(activePlayer, declaredEffect.getName());
-                boolean apIsBluffing = cardFlag < 0;
+                boolean apIsBluffing = cardFlag < 0; //sentinel value -1 returned from checkEffectBluff if AP bluffed.
 
-                Player targetPlayer = activePlayer; //default, assumes effect is not targeted.
-                
-                if (declaredEffect.isTargeted()) {
-                    String targetPrompt = "Enter the name of the target player: ";
-                    String target = Tools.promptInput(targetPrompt, "Sorry, that isn't valid. " + targetPrompt, otherPlayerNames);
-                    try {
-                        targetPlayer = Game.findLivingPlayer(target);
-                    }
-                    catch (PlayerNotFoundException e) {e.printStackTrace();} //theoretically shouldn't reach here...
-                    Tools.showMessage(targetPlayer.getName() + " is the chosen target!\n", 2);
-                }
+                Player targetPlayer = Game.setTargetPlayer(activePlayer, declaredEffect);
 
                 boolean challengeIssued = false;
                 boolean challengeSuccessful = false;
                 
                 if (declaredEffect.isRefutable()){
-                    boolean[] challengeResults = Game.processChallenges(otherPlayers, activePlayer, apIsBluffing, cardFlag, deck);
+                    boolean[] challengeResults = Game.processChallenges(activePlayer, apIsBluffing, cardFlag);
                     challengeIssued = challengeResults[0];
                     challengeSuccessful = challengeResults[1];
                 }
 
                 boolean blockSuccessful = false;
-                if (!challengeIssued){ //blocking only relevant when a challenge was not issued.
-                    if(declaredEffect.isBlockable()){
-                        if (declaredEffect instanceof ForeignAid) {  
-                            for (Player player : otherPlayers) {
-                                String blockPrompt = player.getName() + ", would you like to counteract? [y/n]: ";
-                                String willBlock = Tools.promptInput(blockPrompt, "Sorry, that isn't valid. " + blockPrompt, yN).toLowerCase();
-                                if(willBlock.equals("y")) {
-                                    String counteract = targetPlayer.counteract(declaredEffect);
-                                    int blockFlag = Game.checkCounteractBluff(player, counteract);
-                                    boolean tpIsBluffing = blockFlag < 0;
-                                    boolean blockChallenge = Game.processChallenges(activePlayerAsArr, player, tpIsBluffing, blockFlag, deck)[1];
-                                    blockSuccessful = !blockChallenge; //successful challenge means failed block and vice versa, hence the not operator.
-                                    break; //once a block and challenge are resolved, no other blocks/challenges can be issued.
-                                }
-                            }
-                        }
-                        else {
-                            String blockPrompt = targetPlayer.getName() + ", would you like to counteract? [y/n]: ";
-                            String willBlock = Tools.promptInput(blockPrompt, "Sorry, that isn't valid. " + blockPrompt, yN).toLowerCase();
-                            if(willBlock.equals("y")) {
-                                String counteract = targetPlayer.counteract(declaredEffect);
-                                int blockFlag = Game.checkCounteractBluff(targetPlayer, counteract);
-                                boolean tpIsBluffing = blockFlag < 0;
-                                boolean blockChallenge = Game.processChallenges(activePlayerAsArr, targetPlayer, tpIsBluffing, blockFlag, deck)[1];
-                                blockSuccessful = !blockChallenge; //successful challenge means failed block and vice versa, hence the not operator.
-                            }
+                if (!challengeIssued && declaredEffect.isBlockable()){ //blocking only relevant when a challenge was not issued.
+                    if (declaredEffect instanceof ForeignAid) {
+                        for (Player player : Game.findWaitingPlayers(activePlayer)) {
+                            boolean[] result = Game.processBlock(activePlayer, player, declaredEffect);
+                            blockSuccessful = result[1];
+                            if (result[0]) break; //if a block was attempted, stop looping regardless of outcome
                         }
                     }
+                    else blockSuccessful = Game.processBlock(activePlayer, targetPlayer, declaredEffect)[1];
                 }
 
                 if (!challengeSuccessful && !blockSuccessful) {//both the challenge and the block have to be passed in order to execute.
@@ -185,11 +120,7 @@ public class App {
                 
                 Game.updatePlayerList();
                 roundWinner = Game.getWinner();
-                if(!(roundWinner == null)){
-                    try {Game.findAnyPlayer(roundWinner).increaseScore();}
-                    catch (PlayerNotFoundException e) {e.printStackTrace();}
-                }
-                
+                if(!(roundWinner == null)) Objects.requireNonNull(Game.findAnyPlayer(roundWinner)).increaseScore();
                 else {activePlayer = Game.findTurnPlayer(activePlayer);}
             }
             

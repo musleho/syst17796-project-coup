@@ -1,7 +1,8 @@
-package src.Effects;
+package Effects;
 
-import src.Game.Player;
-import src.Game.Deck;
+import Game.Player;
+import Game.Deck;
+import Game.Game;
 
 public class Coup extends Effect {
     private final Deck deck;
@@ -12,7 +13,7 @@ public class Coup extends Effect {
     }
 
     public void execute(Player targetPlayer){
-        targetPlayer.loseInfluence(deck);
+        Game.loseInfluence(targetPlayer, deck);
     }
 
     public String toString(){
