@@ -107,13 +107,15 @@ public class Player implements Comparable<Player>{
     }
 
     protected void loseInfluence(int cardIndex, Deck deck) {
-        Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
-        influence--; //reduce player influence by 1
-        deck.discard(hand.get(cardIndex));
-        hand.remove(cardIndex); //remove a chosen card from the player's hand
+        if (this.influence > 0) {
+            Tools.showOnlyMessage(name + " has discarded their " + hand.get(cardIndex).getName() + "!\n", 3.2);
+            influence--; //reduce player influence by 1
+            deck.discard(hand.get(cardIndex));
+            hand.remove(cardIndex); //remove a chosen card from the player's hand
 
-        if (influence < 1) { //if player influence falls to 0 or less, they are no longer active
-            alive = false;
+            if (influence < 1) { //if player influence falls to 0 or less, they are no longer active
+                alive = false;
+            }
         }
     }
 
@@ -136,5 +138,16 @@ public class Player implements Comparable<Player>{
     protected boolean isAlive() {return this.alive;}
     
 //----------------------------------------------------DEBUG/TESTING ONLY-----------------------------------------------
-    
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public void setInfluence(int influence) {
+        this.influence = influence;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
 }

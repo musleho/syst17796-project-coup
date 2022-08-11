@@ -10,7 +10,7 @@ public class Deck {
 
     private static Deck deck;
     
-    private Deck() {
+    Deck() {
         buildDeck();
     }
 
