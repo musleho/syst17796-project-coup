@@ -17,6 +17,7 @@ class GameTest {
         Game.resetActivePlayers();
         Game.PLAYERS.clear();
         Game.ALL_PLAYERS.clear();
+        Game.deck.resetDeck();
     }
 
     @Test

@@ -19,6 +19,7 @@ class PlayerTest {
         Game.resetActivePlayers();
         Game.PLAYERS.clear();
         Game.ALL_PLAYERS.clear();
+        Game.deck.resetDeck();
     }
 
     @Test
@@ -63,7 +64,6 @@ class PlayerTest {
         //'Good' test case when user has two influence and loses 1
         Player testPlayer = Game.PLAYERS.get(0);
         testPlayer.loseInfluence(0, new Deck());
-        System.out.println("Test run");
         assertEquals(testPlayer.getInfluence(), 1);
     }
 
