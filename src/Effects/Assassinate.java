@@ -1,7 +1,8 @@
-package src.Effects;
+package Effects;
 
-import src.Game.Player;
-import src.Game.Deck;
+import Game.Game;
+import Game.Player;
+import Game.Deck;
 
 public class Assassinate extends Effect{
 
@@ -13,7 +14,7 @@ public class Assassinate extends Effect{
     }
     
     public void execute(Player targetPlayer){
-        targetPlayer.loseInfluence(deck);
+        Game.loseInfluence(targetPlayer, deck);
     }
 
     public String toString(){

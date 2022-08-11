@@ -1,10 +1,10 @@
-package src.Game;
-import src.Exceptions.InvalidNameException;
+package Game;
+import Exceptions.InvalidNameException;
 
 
 public class Card {
     public static final String[] validNames = {"Ambassador", "Assassin", "Captain", "Contessa", "Duke"};
-    private String name;
+    private final String name;
     private String effect;
     private String counteraction;
 

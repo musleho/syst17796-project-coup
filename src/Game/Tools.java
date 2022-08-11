@@ -1,4 +1,4 @@
-package src.Game;
+package Game;
 
 import java.util.Scanner;
 
@@ -15,7 +15,7 @@ public abstract class Tools {
             Thread.sleep((int)(1000*seconds));
         }
         catch (InterruptedException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
